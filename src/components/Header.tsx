@@ -71,13 +71,13 @@ export default function Header() {
 function SocialLinks() {
   return (
     <>
-      <a href="https://instagram.com/titiltei" target="_blank" rel="noopener noreferrer" className="w-8 h-8 bg-white rounded-full flex items-center justify-center hover:bg-[#e3001b] transition-colors">
+      <a href="https://instagram.com/titiltei" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-[#e3001b] transition-colors">
         <InstagramIcon />
       </a>
-      <a href="https://youtube.com/@titiltei" target="_blank" rel="noopener noreferrer" className="w-8 h-8 bg-white rounded-full flex items-center justify-center hover:bg-[#e3001b] transition-colors">
+      <a href="https://youtube.com/@titiltei" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-[#e3001b] transition-colors">
         <YouTubeIcon />
       </a>
-      <a href="https://tiktok.com/@titiltei" target="_blank" rel="noopener noreferrer" className="w-8 h-8 bg-white rounded-full flex items-center justify-center hover:bg-[#e3001b] transition-colors">
+      <a href="https://tiktok.com/@titiltei" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-[#e3001b] transition-colors">
         <TikTokIcon />
       </a>
     </>
