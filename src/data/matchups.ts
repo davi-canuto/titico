@@ -1,0 +1,111 @@
+import { Matchup } from '@/lib/types'
+
+export const matchups: Matchup[] = [
+  {
+    champion: 'Viego',
+    displayName: 'Viego',
+    difficulty: 'Fácil',
+    estrategia: [
+      'Invada no nível 3, já que a troca early é totalmente sua.',
+      'Use caixinhas para cancelar o W (Fauces Espectrais) do Viego — o Fear vai punir a tentativa de engage dele.',
+      'Use Ignite e guarde o Q (Enganar) para seguir o Flash do Viego e garantir o abate.',
+    ],
+    dicas: [
+      'Fique atento aos campos da jungle, sempre invadindo para atrasar o early game dele.',
+      'Jogue com a pressão do seu time para garantir o invade e impedir que o Viego escale e vire um problema.',
+    ],
+    detalhes: [
+      'A troca no nível 3 é decisiva: se você souber usar bem as skills, a luta é sua.',
+      'Coloque as caixinhas no pé para cancelar o W dele e garantir o Fear, criando espaço para aplicar ataques pelas costas.',
+      'Se ele tentar fugir, Ignite + Q asseguram a perseguição. Se ele gastar Flash, é praticamente free kill.',
+    ],
+  },
+  {
+    champion: 'Diana',
+    displayName: 'Diana',
+    difficulty: 'Médio',
+    estrategia: [
+      'Faça três campos e invada o lado oposto da jungle dela, roubando o campo em que ela estará mais distante.',
+      'O objetivo é atrasar o nível 4 da Diana, forçando-a a invadir sua jungle para tentar recuperar o farm perdido.',
+      'Se ela gastar o W (Cascata Lívida) cedo no campo, entre com caixinhas posicionadas no pé dela para garantir o abate.',
+    ],
+    dicas: [
+      'No nível 6, você leva vantagem direta: abuse dessa janela e pressione sempre que possível.',
+      'Nas teamfights, posicione caixinhas perto dos seus carries para impedir que ela consiga engajar com facilidade.',
+    ],
+    detalhes: [
+      'A Diana depende muito do W para se proteger.',
+      'Se ela gastar suas skills (W, Q e E) no farm, você pode engajar com segurança, usando as caixinhas para aplicar o Fear e finalizar.',
+      'A partir do nível 4, ela começa a virar mais forte graças ao escudo e à mobilidade, então sua melhor chance é punir cedo.',
+      'Em lutas de equipe, uma caixinha bem posicionada na rota de entrada dela pode travar o engage e abrir espaço para o seu time reagir.',
+    ],
+    itemSugestao: { name: 'Duskblade of Draktharr', id: 6691 },
+  },
+  {
+    champion: 'JarvanIV',
+    displayName: 'Jarvan IV',
+    difficulty: 'Médio',
+    estrategia: [
+      'Evite confrontos diretos no nível 3, já que o Jarvan tem dano base alto e ataque rápido graças à bandeira (E + Q).',
+      'Foque em counter ganks: espelhe o path dele e puna quando ele tentar gankar.',
+      'No nível 6, você ganha a troca se tiver reflexo para counterar a ultimate (Cataclisma) com o Q (Enganar) ou o R (Alucinação).',
+      'Garanta objetivos cedo, pois o Jarvan não tem bom escalonamento.',
+    ],
+    dicas: [
+      'Mantenha os olhos no mapa: o Jarvan é um jungler previsível.',
+      'Posicione caixinhas perto dos aliados para travar os engages dele.',
+    ],
+    detalhes: [
+      'O Jarvan tem grande vantagem no nível 3 se conseguir executar bem o combo.',
+      'O segredo é esperar ele gastar as habilidades no farm e só então punir.',
+      'Ele depende de um early game forte para ser relevante no mid/late game.',
+      'Neutralize os ganks com counter ganks bem posicionados e ele perde bastante impacto.',
+    ],
+    itemSugestao: { name: 'Duskblade of Draktharr', id: 6691 },
+  },
+  {
+    champion: 'Kayn',
+    displayName: 'Kayn',
+    difficulty: 'Médio',
+    estrategia: [
+      'Invada no nível 3, mas seja paciente: espere ele perder vida no campo e use Ignite para cortar a cura do E (Transcendência Sombria).',
+      'Se ele usar o E para fugir, siga com o Q (Enganar) e finalize.',
+      'Caso ele queime o Flash, aproveite para roubar os campos restantes.',
+      'Controle o early game dele enquanto ainda está na forma humana.',
+      'É fundamental garantir objetivos cedo, já que o late game do Kayn é muito forte.',
+    ],
+    dicas: [
+      'Jogue pela fog of war e seja sorrateiro. Se ele te ver, recue e reprograme o invade.',
+      'Abuse da fraqueza dele no early game, antes que consiga evoluir para suas formas.',
+    ],
+    detalhes: [
+      'O Kayn se torna perigoso no mid/late game se tiver uma rota de farm tranquila.',
+      'Sua cura e mobilidade tornam difícil punir mais tarde.',
+      'A melhor estratégia é pressionar antes de ele conseguir forma e impedir que escale.',
+    ],
+    itemSugestao: { name: 'Shadowflame', id: 4645 },
+  },
+  {
+    champion: 'LeeSin',
+    displayName: 'Lee Sin',
+    difficulty: 'Médio',
+    estrategia: [
+      'Essa matchup é polêmica, mas não tão difícil quanto parece.',
+      'O duelo se resume a quem troca melhor, já que nenhum tem grande vantagem direta.',
+      'Tanto invadir o Lee no nível 3 quanto fazer full clear funcionam — a chave é não ter medo.',
+      'Se ele gastar o Q (Onda Sônica) cedo, use uma caixinha no seu pé para cancelar e ganhar a troca.',
+      'Vale a pena investir em 3 pontos no W (Caixinhas) nessa matchup: acelera o clear e fortalece trocas em curta distância.',
+      'Controle a jungle para atrasar o snowball do Lee Sin.',
+    ],
+    dicas: [
+      'Posicione caixinhas para counterar as entradas dele.',
+      'Jogue agressivamente e não tenha medo, mas evite tomar o Q — se acertar, você pode ser eliminado rápido.',
+    ],
+    detalhes: [
+      'O Lee Sin tem um kit que favorece muito o early game, mas depende de acertar habilidades para dominar.',
+      'Se você prever suas jogadas e controlar o ritmo cedo, ele perderá impacto no mid/late game.',
+      'Neutralizar as primeiras tentativas de gank e cortar o ritmo dele é essencial para tirar sua força no jogo.',
+    ],
+    itemSugestao: { name: 'Duskblade of Draktharr', id: 6691 },
+  },
+]
