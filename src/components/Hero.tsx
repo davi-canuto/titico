@@ -21,7 +21,7 @@ export default function Hero() {
       <div className="hidden sm:block absolute left-0 top-1/3 mt-36 w-1.5 h-14 bg-[#e3001b]" />
 
       {/* Conteúdo */}
-      <div className="relative z-10 w-full max-w-6xl mx-auto px-5 sm:px-8 pt-24 pb-16 flex flex-col items-center sm:items-start text-center sm:text-left gap-0">
+      <div className="relative z-10 w-full max-w-6xl mx-auto px-5 sm:px-8 pt-24 pb-16 flex flex-col items-center text-center gap-0">
 
         {/* Tag */}
         <p className="text-white/50 text-[10px] sm:text-xs uppercase tracking-[0.3em] mb-3 font-semibold">
@@ -61,7 +61,7 @@ export default function Hero() {
         </div>
 
         {/* Stats */}
-        <div className="mt-10 sm:mt-14 flex items-center gap-6 sm:gap-10 self-center sm:self-start">
+        <div className="mt-10 sm:mt-14 flex items-center gap-6 sm:gap-10">
           <Stat value="#1" label="Challenger BR" highlight />
           <div className="w-px h-10 bg-white/10" />
           <Stat value="Shaco" label="AD Jungle" />
@@ -81,7 +81,7 @@ export default function Hero() {
 
 function Stat({ value, label, highlight }: { value: string; label: string; highlight?: boolean }) {
   return (
-    <div className="flex flex-col items-center sm:items-start gap-0.5">
+    <div className="flex flex-col items-center gap-0.5">
       <p className={`text-2xl sm:text-4xl font-black leading-none ${highlight ? 'text-[#e3001b]' : 'text-white'}`}>
         {value}
       </p>
