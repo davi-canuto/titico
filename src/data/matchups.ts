@@ -112,7 +112,7 @@ export const matchups: Matchup[] = [
 
 export const lockedMatchups: Array<{ champion: string; displayName: string; difficulty: 'Fácil' | 'Médio' | 'Difícil' }> = [
   { champion: 'Amumu',        displayName: 'Amumu',        difficulty: 'Fácil'   },
-  { champion: 'BelVeth',      displayName: "Bel'Veth",     difficulty: 'Médio'   },
+  { champion: 'Belveth',      displayName: "Bel'Veth",     difficulty: 'Médio'   },
   { champion: 'Briar',        displayName: 'Briar',        difficulty: 'Médio'   },
   { champion: 'Ekko',         displayName: 'Ekko',         difficulty: 'Médio'   },
   { champion: 'Elise',        displayName: 'Elise',        difficulty: 'Médio'   },
@@ -121,7 +121,7 @@ export const lockedMatchups: Array<{ champion: string; displayName: string; diff
   { champion: 'Gragas',       displayName: 'Gragas',       difficulty: 'Médio'   },
   { champion: 'Graves',       displayName: 'Graves',       difficulty: 'Difícil' },
   { champion: 'Hecarim',      displayName: 'Hecarim',      difficulty: 'Médio'   },
-  { champion: 'KhaZix',       displayName: "Kha'Zix",      difficulty: 'Fácil'   },
+  { champion: 'Khazix',       displayName: "Kha'Zix",      difficulty: 'Fácil'   },
   { champion: 'Kindred',      displayName: 'Kindred',      difficulty: 'Médio'   },
   { champion: 'Lillia',       displayName: 'Lillia',       difficulty: 'Fácil'   },
   { champion: 'MasterYi',     displayName: 'Master Yi',    difficulty: 'Fácil'   },
@@ -139,7 +139,7 @@ export const lockedMatchups: Array<{ champion: string; displayName: string; diff
   { champion: 'Vi',           displayName: 'Vi',           difficulty: 'Fácil'   },
   { champion: 'Volibear',     displayName: 'Volibear',     difficulty: 'Médio'   },
   { champion: 'Warwick',      displayName: 'Warwick',      difficulty: 'Médio'   },
-  { champion: 'Wukong',       displayName: 'Wukong',       difficulty: 'Médio'   },
+  { champion: 'MonkeyKing',   displayName: 'Wukong',       difficulty: 'Médio'   },
   { champion: 'XinZhao',      displayName: 'Xin Zhao',     difficulty: 'Fácil'   },
   { champion: 'Zac',          displayName: 'Zac',          difficulty: 'Médio'   },
   { champion: 'Rammus',       displayName: 'Rammus',       difficulty: 'Fácil'   },
