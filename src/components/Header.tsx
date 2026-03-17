@@ -29,6 +29,14 @@ export default function Header() {
             href="https://api.whatsapp.com/send/?phone=5512982700714&text=Ol%C3%A1%2C+tudo+bem+%3F%21+Vim+do+site+e+gostaria+de+fazer+um+or%C3%A7amento+%21&type=phone_number&app_absent=0"
             target="_blank"
             rel="noopener noreferrer"
+            className="border border-white/30 hover:border-white text-white text-sm font-bold uppercase tracking-wider px-4 py-2 rounded transition-colors"
+          >
+            Agendar Coach
+          </a>
+          <a
+            href="https://api.whatsapp.com/send/?phone=5512982700714&text=Ol%C3%A1%2C+tudo+bem+%3F%21+Vim+do+site+e+gostaria+de+fazer+um+or%C3%A7amento+%21&type=phone_number&app_absent=0"
+            target="_blank"
+            rel="noopener noreferrer"
             className="bg-[#e3001b] hover:bg-[#b50015] text-white text-sm font-bold uppercase tracking-wider px-4 py-2 rounded transition-colors"
           >
             Comprar Guia
