@@ -34,7 +34,9 @@ export default function Hero() {
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
           <a
-            href="#guia"
+            href="https://api.whatsapp.com/send/?phone=5512982700714&text=Ol%C3%A1%2C+tudo+bem+%3F%21+Vim+do+site+e+gostaria+de+fazer+um+or%C3%A7amento+%21&type=phone_number&app_absent=0"
+            target="_blank"
+            rel="noopener noreferrer"
             className="bg-[#e3001b] hover:bg-[#b50015] text-white font-black uppercase tracking-wider text-lg px-8 py-4 rounded transition-colors"
           >
             Comprar Guia Completo
