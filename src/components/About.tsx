@@ -5,11 +5,12 @@ export default function About() {
         <div className="flex flex-col md:flex-row gap-12 items-center">
           {/* Photo placeholder */}
           <div className="shrink-0">
-            <div className="w-48 h-48 md:w-64 md:h-64 rounded-2xl overflow-hidden border-2 border-[#e3001b] bg-[#1a1a1a]">
-              {/* Substituir pela foto real do Tiago */}
-              <div className="w-full h-full flex items-center justify-center text-white/20 text-sm uppercase tracking-wider">
-                Foto
-              </div>
+            <div className="w-48 h-48 md:w-64 md:h-64 rounded-2xl overflow-hidden border-2 border-[#e3001b]">
+              <img
+                src="/titico.jpeg"
+                alt="Titiltei"
+                className="w-full h-full object-cover object-top"
+              />
             </div>
           </div>
 
