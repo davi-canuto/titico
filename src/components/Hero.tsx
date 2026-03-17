@@ -1,5 +1,12 @@
+import { matchups, lockedMatchups } from '@/data/matchups'
+
 const WA_URL =
   'https://api.whatsapp.com/send/?phone=5512982700714&text=Ol%C3%A1%2C+tudo+bem+%3F%21+Vim+do+site+e+gostaria+de+fazer+um+or%C3%A7amento+%21&type=phone_number&app_absent=0'
+
+const DDRAGON = 'https://ddragon.leagueoflegends.com/cdn/15.5.1'
+
+const previewUnlocked = matchups.slice(0, 5)
+const previewLocked = lockedMatchups.slice(0, 7)
 
 export default function Hero() {
   return (
@@ -23,7 +30,7 @@ export default function Hero() {
       <div className="relative z-10 w-full mx-auto px-6 sm:px-10 lg:px-16 pt-28 pb-16 flex flex-col items-center text-center">
 
         {/* Tag */}
-        <p className="text-white/50 text-[10px] sm:text-xs uppercase tracking-[0.25em] mb-3 sm:mb-4 font-semibold">
+        <p className="text-white/50 text-[10px] sm:text-xs uppercase tracking-[0.25em] mb-3 font-semibold">
           Guia Definitivo — Shaco AD Jungle
         </p>
 
@@ -41,8 +48,18 @@ export default function Hero() {
           Se torne um deus jogando de Shaco
         </p>
 
+        {/* Rank badges */}
+        <div className="mt-4 flex gap-2 sm:gap-3 flex-wrap justify-center">
+          <span className="bg-[#e3001b]/20 border border-[#e3001b]/50 text-[#e3001b] text-[10px] sm:text-xs font-black uppercase tracking-wider px-3 py-1 rounded-full">
+            🏆 Top 1 Shaco do Mundo
+          </span>
+          <span className="bg-white/5 border border-white/20 text-white/70 text-[10px] sm:text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full">
+            🇧🇷 Top 1 Shaco BR
+          </span>
+        </div>
+
         {/* CTAs */}
-        <div className="mt-7 sm:mt-10 flex flex-col xs:flex-row gap-3 w-full max-w-xs xs:max-w-none xs:w-auto">
+        <div className="mt-7 sm:mt-9 flex flex-col xs:flex-row gap-3 w-full max-w-xs xs:max-w-none xs:w-auto">
           <a
             href={WA_URL}
             target="_blank"
@@ -59,13 +76,41 @@ export default function Hero() {
           </a>
         </div>
 
-        {/* Stats */}
-        <div className="mt-8 sm:mt-12 lg:mt-14 flex items-center gap-4 sm:gap-8 lg:gap-10">
-          <Stat value="#1" label="Challenger BR" highlight />
-          <div className="w-px h-8 sm:h-10 bg-white/10" />
-          <Stat value="Shaco" label="AD Jungle" />
-          <div className="w-px h-8 sm:h-10 bg-white/10" />
-          <Stat value="BR" label="Server" />
+        {/* Mini matchup grid */}
+        <div className="mt-8 sm:mt-10">
+          <p className="text-white/30 text-[10px] uppercase tracking-widest mb-4">
+            Matchups disponíveis no guia
+          </p>
+          <div className="flex flex-wrap gap-2 sm:gap-3 justify-center max-w-sm sm:max-w-lg">
+            {previewUnlocked.map((m) => (
+              <a key={m.champion} href="#matchups" title={m.displayName}>
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden ring-2 ring-[#e3001b]/60 hover:ring-[#e3001b] transition-all">
+                  <img
+                    src={`${DDRAGON}/img/champion/${m.champion}.png`}
+                    alt={m.displayName}
+                    className="w-full h-full object-cover scale-110"
+                  />
+                </div>
+              </a>
+            ))}
+            {previewLocked.map((m) => (
+              <a key={m.champion} href="#matchups" title={`${m.displayName} — Bloqueado`}>
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden ring-2 ring-white/10 relative">
+                  <img
+                    src={`${DDRAGON}/img/champion/${m.champion}.png`}
+                    alt={m.displayName}
+                    className="w-full h-full object-cover scale-110 grayscale opacity-40"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+                    <LockIcon />
+                  </div>
+                </div>
+              </a>
+            ))}
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
+              <span className="text-white/40 text-[10px] font-bold">+{lockedMatchups.length - previewLocked.length}</span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -78,13 +123,10 @@ export default function Hero() {
   )
 }
 
-function Stat({ value, label, highlight }: { value: string; label: string; highlight?: boolean }) {
+function LockIcon() {
   return (
-    <div className="flex flex-col items-center gap-0.5">
-      <p className={`text-xl sm:text-3xl lg:text-4xl font-black leading-none ${highlight ? 'text-[#e3001b]' : 'text-white'}`}>
-        {value}
-      </p>
-      <p className="text-[9px] sm:text-[11px] text-white/45 uppercase tracking-wider">{label}</p>
-    </div>
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="white" opacity="0.7">
+      <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+    </svg>
   )
 }

@@ -36,28 +36,20 @@ export default function About() {
               </p>
             </div>
 
-            {/* Rank table */}
-            <div className="mt-8 border border-[#e3001b]/40 rounded overflow-hidden max-w-md">
-              <div className="grid grid-cols-4 bg-[#1a1a1a] text-white/50 text-xs uppercase tracking-wider font-semibold">
-                <div className="px-4 py-3 border-b border-white/5">Rank</div>
-                <div className="px-4 py-3 border-b border-white/5">Tier</div>
-                <div className="px-4 py-3 border-b border-white/5">Name</div>
-                <div className="px-4 py-3 border-b border-white/5">Region</div>
-              </div>
-              <div className="grid grid-cols-4 bg-[#111] items-center">
-                <div className="px-4 py-4 text-white font-black text-lg">1</div>
-                <div className="px-4 py-4">
-                  <div className="flex flex-col items-center gap-1">
-                    <span className="text-lg">🏆</span>
-                    <span className="text-white/60 text-xs font-bold">CH</span>
-                  </div>
+            {/* Rank badges */}
+            <div className="mt-8 flex flex-wrap gap-3">
+              <div className="bg-[#e3001b]/15 border border-[#e3001b]/40 rounded-xl px-5 py-3 flex items-center gap-3">
+                <span className="text-2xl">🏆</span>
+                <div>
+                  <p className="text-[#e3001b] font-black uppercase text-xs tracking-wider">Top 1 Shaco do Mundo</p>
+                  <p className="text-white/50 text-xs">TiTiltei#Amor</p>
                 </div>
-                <div className="px-4 py-4 text-white font-semibold text-sm">TiTiltei#Amor</div>
-                <div className="px-4 py-4">
-                  <div className="flex items-center gap-2">
-                    <span className="text-lg">🇧🇷</span>
-                    <span className="text-white/60 text-xs font-bold">BR</span>
-                  </div>
+              </div>
+              <div className="bg-white/5 border border-white/10 rounded-xl px-5 py-3 flex items-center gap-3">
+                <span className="text-2xl">🇧🇷</span>
+                <div>
+                  <p className="text-white font-black uppercase text-xs tracking-wider">Top 1 Shaco BR</p>
+                  <p className="text-white/50 text-xs">Server BR</p>
                 </div>
               </div>
             </div>
