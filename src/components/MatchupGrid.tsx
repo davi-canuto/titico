@@ -17,7 +17,8 @@ const difficultyConfig: Record<Difficulty, { color: string; ring: string }> = {
 
 export default function MatchupGrid() {
   const [selected, setSelected] = useState<Matchup | null>(null)
-  const [lockedAlert, setLockedAlert] = useState(false)
+  const [lockedModal, setLockedModal] = useState(false)
+  const [exploding, setExploding] = useState(false)
 
   function handleSelect(m: Matchup) {
     if (selected?.champion === m.champion) {
@@ -31,8 +32,17 @@ export default function MatchupGrid() {
   }
 
   function handleLocked() {
-    setLockedAlert(true)
-    setTimeout(() => setLockedAlert(false), 3000)
+    setLockedModal(true)
+    setExploding(false)
+  }
+
+  function handleExplode() {
+    setExploding(true)
+    setTimeout(() => {
+      window.open(WA_URL, '_blank')
+      setLockedModal(false)
+      setExploding(false)
+    }, 500)
   }
 
   return (
@@ -80,28 +90,30 @@ export default function MatchupGrid() {
           })}
 
           {/* Bloqueados */}
-          {lockedMatchups.map((m) => (
-            <button
-              key={m.champion}
-              onClick={handleLocked}
-              title={`${m.displayName} — Disponível no guia completo`}
-              className="group flex flex-col items-center gap-1.5 transition-transform hover:scale-105"
-            >
-              <div className="relative w-[62px] h-[62px] sm:w-[74px] sm:h-[74px] rounded-full overflow-hidden ring-2 ring-white/10">
-                <img
-                  src={`${DDRAGON}/img/champion/${m.champion}.png`}
-                  alt={m.displayName}
-                  className="w-full h-full object-cover scale-110 grayscale opacity-35"
-                />
-                <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                  <LockIcon />
+          {lockedMatchups.map((m) => {
+            const diff = difficultyConfig[m.difficulty]
+            return (
+              <button
+                key={m.champion}
+                onClick={handleLocked}
+                title={`${m.displayName} — Disponível no guia completo`}
+                className="group flex flex-col items-center gap-1.5 transition-transform hover:scale-105"
+              >
+                <div className="relative w-[62px] h-[62px] sm:w-[74px] sm:h-[74px] rounded-full overflow-hidden ring-2 ring-white/10 transition-all">
+                  <img
+                    src={`${DDRAGON}/img/champion/${m.champion}.png`}
+                    alt={m.displayName}
+                    style={{ filter: 'saturate(0.3) brightness(0.55)' }}
+                    className="w-full h-full object-cover scale-110 transition-all group-hover:brightness-75"
+                  />
+                  <div className="absolute bottom-0 inset-x-0 h-1 opacity-40" style={{ backgroundColor: diff.color }} />
                 </div>
-              </div>
-              <span className="text-[10px] sm:text-xs text-white/25 font-medium max-w-[70px] sm:max-w-[80px] text-center leading-tight">
-                {m.displayName}
-              </span>
-            </button>
-          ))}
+                <span className="text-[10px] sm:text-xs text-white/30 group-hover:text-white/60 transition-colors font-medium max-w-[70px] sm:max-w-[80px] text-center leading-tight">
+                  {m.displayName}
+                </span>
+              </button>
+            )
+          })}
         </div>
 
         {/* Legenda */}
@@ -112,26 +124,98 @@ export default function MatchupGrid() {
               <span>{d}</span>
             </div>
           ))}
-          <div className="flex items-center gap-1.5">
-            <LockIcon small />
-            <span>Somente no guia completo</span>
-          </div>
         </div>
 
-        {/* Alert bloqueado */}
-        {lockedAlert && (
-          <div className="mt-6 mx-auto max-w-sm bg-[#1a1a1a] border border-[#e3001b]/40 rounded-xl p-4 text-center animate-in fade-in slide-in-from-bottom-2">
-            <p className="text-white font-bold text-sm mb-1">🔒 Matchup Bloqueada</p>
-            <p className="text-white/50 text-xs mb-3">Esta matchup está disponível apenas no guia completo.</p>
-            <a
-              href={WA_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block bg-[#e3001b] hover:bg-[#b50015] text-white font-black uppercase tracking-wider text-xs px-5 py-2.5 rounded-lg transition-colors"
+        {/* Modal — caixinha do Shaco */}
+        {lockedModal && (
+          <>
+            <style>{`
+              @keyframes box-drop {
+                0%   { opacity: 0; transform: translateY(-60px) rotate(-8deg) scale(0.7); }
+                60%  { opacity: 1; transform: translateY(6px) rotate(2deg) scale(1.05); }
+                80%  { transform: translateY(-3px) rotate(-1deg) scale(0.98); }
+                100% { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
+              }
+              @keyframes box-shake {
+                0%,100% { transform: rotate(0deg); }
+                20%  { transform: rotate(-3deg); }
+                40%  { transform: rotate(3deg); }
+                60%  { transform: rotate(-2deg); }
+                80%  { transform: rotate(2deg); }
+              }
+              @keyframes box-explode {
+                0%   { opacity: 1; transform: scale(1) rotate(0deg); filter: brightness(1); }
+                30%  { opacity: 1; transform: scale(1.1) rotate(-4deg); filter: brightness(3) saturate(0); }
+                60%  { opacity: 0.6; transform: scale(1.4) rotate(6deg); filter: brightness(5) saturate(0); }
+                100% { opacity: 0; transform: scale(2) rotate(-8deg); filter: brightness(8) saturate(0); }
+              }
+              @keyframes overlay-flash {
+                0%   { opacity: 0; }
+                40%  { opacity: 0.7; }
+                100% { opacity: 0; }
+              }
+              .box-drop    { animation: box-drop 0.4s cubic-bezier(0.22,1,0.36,1) forwards; }
+              .box-shake   { animation: box-drop 0.4s cubic-bezier(0.22,1,0.36,1) forwards, box-shake 1.2s ease-in-out 0.5s infinite; }
+              .box-explode { animation: box-explode 0.5s ease-in forwards; }
+              .overlay-flash { animation: overlay-flash 0.5s ease-out forwards; }
+            `}</style>
+
+            {/* Flash overlay */}
+            {exploding && (
+              <div className="overlay-flash fixed inset-0 z-[60] bg-white pointer-events-none" />
+            )}
+
+            <div
+              className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80"
+              onClick={(e) => { if (e.target === e.currentTarget && !exploding) setLockedModal(false) }}
             >
-              Comprar Guia Completo
-            </a>
-          </div>
+              <div className="relative">
+                {/* X */}
+                <button
+                  onClick={() => setLockedModal(false)}
+                  className="absolute -top-3 -right-3 z-10 w-7 h-7 bg-black/80 hover:bg-[#e3001b] rounded-full flex items-center justify-center text-white transition-colors text-base font-bold"
+                >
+                  ×
+                </button>
+
+                {/* A caixinha clicável */}
+                <button
+                  onClick={handleExplode}
+                  className={`relative block cursor-pointer ${exploding ? 'box-explode' : 'box-shake'}`}
+                  style={{ width: 200, height: 200 }}
+                  disabled={exploding}
+                >
+                  {/* Sombra/glow roxa embaixo (cor da skill W) */}
+                  <div style={{
+                    position: 'absolute', bottom: -12, left: '50%', transform: 'translateX(-50%)',
+                    width: 120, height: 20, borderRadius: '50%',
+                    background: 'radial-gradient(ellipse, rgba(160,80,255,0.6) 0%, transparent 70%)',
+                    filter: 'blur(4px)',
+                  }} />
+
+                  {/* Tile quadrado do Shaco */}
+                  <img
+                    src="https://ddragon.leagueoflegends.com/cdn/15.5.1/img/champion/Shaco.png"
+                    alt="Shaco"
+                    style={{ width: 200, height: 200, objectFit: 'cover', borderRadius: 16 }}
+                  />
+
+                  {/* Brilho pulsante nas bordas */}
+                  <div style={{
+                    position: 'absolute', inset: 0, borderRadius: 16,
+                    boxShadow: '0 0 24px 6px rgba(160,80,255,0.5), inset 0 0 12px rgba(160,80,255,0.2)',
+                  }} />
+
+                  {/* Texto abaixo */}
+                  <div style={{ position: 'absolute', bottom: -48, left: '50%', transform: 'translateX(-50%)', whiteSpace: 'nowrap', textAlign: 'center' }}>
+                    <p style={{ color: 'white', fontWeight: 900, fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                      Clique para desbloquear
+                    </p>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </>
         )}
 
         {/* Panel */}
@@ -160,14 +244,5 @@ export default function MatchupGrid() {
         </div>
       </div>
     </section>
-  )
-}
-
-function LockIcon({ small }: { small?: boolean }) {
-  const size = small ? 10 : 14
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="white" opacity="0.6">
-      <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
-    </svg>
   )
 }
