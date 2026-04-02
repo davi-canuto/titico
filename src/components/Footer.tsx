@@ -21,10 +21,25 @@ export default function Footer() {
           </a>
         </div>
 
-        <p className="text-white/20 text-xs text-center md:text-right">
-          © {new Date().getFullYear()} Titiltei. Todos os direitos reservados.<br />
-          Não afiliado à Riot Games.
-        </p>
+        <div className="text-center md:text-right">
+          <p className="text-white/20 text-xs">
+            © {new Date().getFullYear()} Titiltei. Todos os direitos reservados.<br />
+            Não afiliado à Riot Games.
+          </p>
+          <p className="text-white/15 text-[10px] mt-2 tracking-wide">
+            feito com{" "}
+            <span className="text-[#e3001b]/40">♥</span>
+            {" "}por{" "}
+            <a
+              href="https://my-portfolio-one-kappa-vvfcztdwko.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white/25 hover:text-white/60 transition-colors duration-300 underline underline-offset-2 decoration-white/10 hover:decoration-white/30"
+            >
+              davi-canuto
+            </a>
+          </p>
+        </div>
       </div>
     </footer>
   )
