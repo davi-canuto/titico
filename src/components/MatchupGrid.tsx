@@ -50,7 +50,7 @@ export default function MatchupGrid() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Title */}
         <div className="text-center mb-10 sm:mb-12">
-          <p className="text-[#e3001b] text-xs uppercase tracking-[0.3em] font-semibold mb-2">Guia do Shaco AD</p>
+          <p className="text-[#e3001b] text-xs uppercase tracking-[0.3em] font-semibold mb-2">Guia do Shaco</p>
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-black uppercase">MATCHUPS</h2>
           <div className="w-16 h-1 bg-[#e3001b] mx-auto mt-4" />
           <p className="text-white/50 mt-4 text-sm">

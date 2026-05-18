@@ -7,8 +7,5 @@ export interface Matchup {
   estrategia: string[]
   dicas: string[]
   detalhes?: string[]
-  itemSugestao?: {
-    name: string
-    id: number            // ID do item no Data Dragon
-  }
+
 }

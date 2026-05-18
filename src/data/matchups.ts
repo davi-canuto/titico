@@ -39,7 +39,6 @@ export const matchups: Matchup[] = [
       'A partir do nível 4, ela começa a virar mais forte graças ao escudo e à mobilidade, então sua melhor chance é punir cedo.',
       'Em lutas de equipe, uma caixinha bem posicionada na rota de entrada dela pode travar o engage e abrir espaço para o seu time reagir.',
     ],
-    itemSugestao: { name: 'Duskblade of Draktharr', id: 6691 },
   },
   {
     champion: 'JarvanIV',
@@ -61,7 +60,6 @@ export const matchups: Matchup[] = [
       'Ele depende de um early game forte para ser relevante no mid/late game.',
       'Neutralize os ganks com counter ganks bem posicionados e ele perde bastante impacto.',
     ],
-    itemSugestao: { name: 'Duskblade of Draktharr', id: 6691 },
   },
   {
     champion: 'Kayn',
@@ -83,7 +81,6 @@ export const matchups: Matchup[] = [
       'Sua cura e mobilidade tornam difícil punir mais tarde.',
       'A melhor estratégia é pressionar antes de ele conseguir forma e impedir que escale.',
     ],
-    itemSugestao: { name: 'Shadowflame', id: 4645 },
   },
   {
     champion: 'LeeSin',
@@ -106,7 +103,6 @@ export const matchups: Matchup[] = [
       'Se você prever suas jogadas e controlar o ritmo cedo, ele perderá impacto no mid/late game.',
       'Neutralizar as primeiras tentativas de gank e cortar o ritmo dele é essencial para tirar sua força no jogo.',
     ],
-    itemSugestao: { name: 'Duskblade of Draktharr', id: 6691 },
   },
 ]
 

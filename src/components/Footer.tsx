@@ -6,7 +6,7 @@ export default function Footer() {
           <p className="text-2xl font-black tracking-widest uppercase">
             TITIL<span className="text-[#e3001b]">TEI</span>
           </p>
-          <p className="text-white/30 text-xs mt-1">Guia do Shaco AD — Rank 1 Challenger BR</p>
+          <p className="text-white/30 text-xs mt-1">Guia do Shaco — Rank 1 Challenger BR</p>
         </div>
 
         <div className="flex gap-6 text-white/40 text-xs uppercase tracking-wider">

@@ -14,7 +14,7 @@ export default function VideoSection() {
           style={{ aspectRatio: '16/9' }}>
           <iframe
             src="https://www.youtube.com/embed/36wA2v1vXWQ"
-            title="Guia do Shaco AD — Titiltei"
+            title="Guia do Shaco — Titiltei"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
             className="absolute inset-0 w-full h-full"

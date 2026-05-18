@@ -31,16 +31,13 @@ export default function Hero() {
 
         {/* Tag */}
         <p className="text-white/50 text-[10px] sm:text-xs uppercase tracking-[0.25em] mb-3 font-semibold">
-          Guia Definitivo — Shaco AD Jungle
+          Guia Definitivo — Shaco Jungle
         </p>
 
         {/* Título */}
         <h1 className="font-black uppercase leading-none tracking-tight">
           <span className="block text-[clamp(2.5rem,10vw,6.5rem)] text-white">GUIA DO</span>
-          <span className="block text-[clamp(2.5rem,10vw,6.5rem)]">
-            <span className="text-[#e3001b]">SHACO</span>
-            <span className="text-white"> AD</span>
-          </span>
+          <span className="block text-[clamp(2.5rem,10vw,6.5rem)] text-[#e3001b]">SHACO</span>
         </h1>
 
         {/* Subtítulo */}
@@ -64,7 +61,7 @@ export default function Hero() {
             href={WA_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-[#e3001b] hover:bg-[#b50015] active:bg-[#900010] text-white font-black uppercase tracking-wider text-xs sm:text-sm lg:text-base px-5 sm:px-7 py-3.5 sm:py-4 rounded-lg transition-colors shadow-lg shadow-red-900/40 whitespace-nowrap"
+            className="border border-white/25 hover:border-white active:bg-white/10 text-white font-black uppercase tracking-wider text-xs sm:text-sm lg:text-base px-5 sm:px-7 py-3.5 sm:py-4 rounded-lg transition-colors whitespace-nowrap"
           >
             Comprar Guia Completo
           </a>
@@ -110,6 +107,16 @@ export default function Hero() {
             <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
               <span className="text-white/40 text-[10px] font-bold">+{lockedMatchups.length - previewLocked.length}</span>
             </div>
+          </div>
+          <div className="mt-5">
+            <a
+              href={WA_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-[#e3001b] hover:bg-[#b50015] active:bg-[#900010] text-white font-black uppercase tracking-wider text-xs sm:text-sm px-6 py-3 rounded-lg transition-colors shadow-lg shadow-red-900/40 whitespace-nowrap"
+            >
+              AGENDAR COACH
+            </a>
           </div>
         </div>
       </div>

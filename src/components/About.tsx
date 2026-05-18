@@ -43,7 +43,7 @@ export default function About() {
                 <span className="text-2xl">🏆</span>
                 <div>
                   <p className="text-[#e3001b] font-black uppercase text-xs tracking-wider">Top 1 Shaco do Mundo</p>
-                  <p className="text-white/50 text-xs">TiTiltei#Amor</p>
+                  <p className="text-white/50 text-xs">titi#shaco</p>
                 </div>
               </div>
               <div className="bg-white/5 border border-white/10 rounded-xl px-5 py-3 flex items-center gap-3">

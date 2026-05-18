@@ -41,16 +41,6 @@ export default function MatchupPanel({ matchup, onClose }: Props) {
               </span>
             </p>
           </div>
-          {matchup.itemSugestao && (
-            <div className="flex flex-col items-center gap-1">
-              <span className="text-white/40 text-xs uppercase tracking-wider">Sugestão</span>
-              <img
-                src={`${DDRAGON}/img/item/${matchup.itemSugestao.id}.png`}
-                alt={matchup.itemSugestao.name}
-                className="w-14 h-14 rounded-lg border border-white/20"
-              />
-            </div>
-          )}
         </div>
         <button
           onClick={onClose}
