@@ -15,6 +15,7 @@ model User {
   emailVerified DateTime?
   image         String?
   role          UserRole     @default(MEMBER)
+  password      String?
   heroSkin      String       @default("0")
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt

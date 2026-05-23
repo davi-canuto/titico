@@ -1,6 +1,5 @@
 import type { NextAuthConfig } from "next-auth"
 import Google from "next-auth/providers/google"
-import Credentials from "next-auth/providers/credentials"
 import type { UserRole } from "@prisma/client"
 
 // Augment next-auth session type — shared across auth.ts and middleware
@@ -19,15 +18,6 @@ declare module "next-auth" {
 export const authConfig: NextAuthConfig = {
   providers: [
     Google,
-    Credentials({
-      credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Senha", type: "password" },
-      },
-      async authorize() {
-        return null
-      },
-    }),
   ],
   session: { strategy: "jwt" },
   pages: {
