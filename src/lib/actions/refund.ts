@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
-import { stripe } from "@/lib/stripe"
+import { getStripe } from "@/lib/stripe"
 import { PurchaseStatus } from "@prisma/client"
 
 const REFUND_DAYS = 7
@@ -29,7 +29,7 @@ export async function requestRefund(purchaseId: string): Promise<{ error?: strin
   }
 
   try {
-    await stripe.refunds.create({ payment_intent: purchase.stripePaymentId })
+    await getStripe().refunds.create({ payment_intent: purchase.stripePaymentId })
   } catch {
     return { error: "Erro ao processar reembolso. Tente novamente." }
   }

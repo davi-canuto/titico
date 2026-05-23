@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { stripe } from "@/lib/stripe"
+import { getStripe } from "@/lib/stripe"
 import { prisma } from "@/lib/prisma"
 import { PurchaseStatus } from "@prisma/client"
 
@@ -9,7 +9,7 @@ interface Props {
 
 async function syncPurchase(sessionId: string): Promise<boolean> {
   try {
-    const session = await stripe.checkout.sessions.retrieve(sessionId)
+    const session = await getStripe().checkout.sessions.retrieve(sessionId)
     if (session.payment_status !== "paid") return false
 
     const userId = session.metadata?.userId

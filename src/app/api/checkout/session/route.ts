@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
-import { stripe, buildPaymentIntentData } from "@/lib/stripe"
+import { getStripe, buildPaymentIntentData } from "@/lib/stripe"
 import { PurchaseStatus } from "@prisma/client"
 
 const bodySchema = z.object({ productId: z.string().min(1) })
@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
 
   let checkoutSession
   try {
-    checkoutSession = await stripe.checkout.sessions.create({
+    checkoutSession = await getStripe().checkout.sessions.create({
       mode: "payment",
       line_items: [
         {
