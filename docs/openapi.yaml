@@ -1,0 +1,717 @@
+openapi: 3.1.0
+
+info:
+  title: Titico App API
+  description: |
+    API da plataforma de conteúdo do **Titiltei** — Guia do Shaco AD.
+
+    ## Autenticação
+    Todas as rotas protegidas exigem uma sessão válida do **Auth.js v5**.
+    O cliente deve manter o cookie de sessão (`next-auth.session-token`).
+    Não há autenticação por API key — o fluxo é exclusivamente via OAuth (Google).
+
+    ## Fluxo de acesso ao conteúdo pago
+    1. Usuário autentica via Google → `/api/auth/signin`
+    2. Usuário inicia checkout → `POST /api/checkout/session`
+    3. Stripe processa pagamento → dispara evento para `POST /api/stripe/webhook`
+    4. Webhook cria `Purchase` com `status: COMPLETED` no banco
+    5. Usuário acessa `/dashboard/*` — middleware verifica `Purchase`
+
+  version: 1.0.0
+  contact:
+    name: Titiltei
+    email: titiltei.contatos@gmail.com
+
+servers:
+  - url: http://localhost:3000
+    description: Desenvolvimento local
+  - url: https://app.titiltei.com
+    description: Produção
+
+tags:
+  - name: auth
+    description: Autenticação via Auth.js v5 (Google OAuth)
+  - name: user
+    description: Dados do usuário autenticado
+  - name: checkout
+    description: Iniciar fluxo de pagamento via Stripe
+  - name: stripe
+    description: Webhooks do Stripe (uso interno — não chamar diretamente)
+  - name: matchups
+    description: Conteúdo de matchups do Shaco (protegido por Purchase)
+  - name: videos
+    description: Biblioteca de vídeos do guia (protegido por Purchase)
+  - name: products
+    description: Produtos disponíveis para compra
+
+# ─────────────────────────────────────────────────────────────────────────────
+paths:
+
+  # ── AUTH ──────────────────────────────────────────────────────────────────
+
+  /api/auth/session:
+    get:
+      tags: [auth]
+      summary: Retorna a sessão atual do usuário
+      description: |
+        Gerenciado pelo Auth.js. Retorna a sessão se o cookie for válido,
+        ou `null` se não autenticado.
+      responses:
+        "200":
+          description: Sessão ativa
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Session"
+              example:
+                user:
+                  id: clx123abc
+                  name: Davi Canuto
+                  email: davi@example.com
+                  image: https://lh3.googleusercontent.com/photo
+                expires: "2026-06-18T00:00:00.000Z"
+        "200 (sem sessão)":
+          description: Não autenticado — retorna null
+          content:
+            application/json:
+              schema:
+                type: "null"
+
+  /api/auth/signin:
+    get:
+      tags: [auth]
+      summary: Página de login (redirect)
+      description: Auth.js redireciona para a página de login configurada (`/login`).
+      responses:
+        "302":
+          description: Redirect para `/login`
+
+  /api/auth/signout:
+    post:
+      tags: [auth]
+      summary: Encerra a sessão do usuário
+      description: Invalida o cookie de sessão e redireciona para a home.
+      responses:
+        "302":
+          description: Redirect para `/`
+
+  /api/auth/providers:
+    get:
+      tags: [auth]
+      summary: Lista providers de OAuth configurados
+      responses:
+        "200":
+          description: Mapa de providers
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: "#/components/schemas/OAuthProvider"
+              example:
+                google:
+                  id: google
+                  name: Google
+                  type: oauth
+                  signinUrl: /api/auth/signin/google
+                  callbackUrl: /api/auth/callback/google
+
+  # ── USER ──────────────────────────────────────────────────────────────────
+
+  /api/user/me:
+    get:
+      tags: [user]
+      summary: Retorna dados do usuário autenticado + status de acesso
+      security:
+        - sessionCookie: []
+      responses:
+        "200":
+          description: Usuário autenticado com status de compra
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  # ── CHECKOUT ──────────────────────────────────────────────────────────────
+
+  /api/checkout/session:
+    post:
+      tags: [checkout]
+      summary: Cria uma Stripe Checkout Session
+      description: |
+        Cria uma sessão de checkout no Stripe para o produto solicitado.
+        Retorna a URL para redirecionar o usuário ao Stripe.
+        O usuário deve estar autenticado. Após o pagamento bem-sucedido,
+        o Stripe chama `POST /api/stripe/webhook`.
+      security:
+        - sessionCookie: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCheckoutSessionRequest"
+            example:
+              productId: prod_guia_completo
+      responses:
+        "200":
+          description: Checkout Session criada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CheckoutSessionResponse"
+              example:
+                checkoutUrl: https://checkout.stripe.com/pay/cs_test_abc123
+                sessionId: cs_test_abc123
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "409":
+          description: Usuário já possui acesso ativo
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              example:
+                error: ALREADY_PURCHASED
+                message: Usuário já possui acesso ativo ao conteúdo.
+
+  # ── STRIPE WEBHOOK ────────────────────────────────────────────────────────
+
+  /api/stripe/webhook:
+    post:
+      tags: [stripe]
+      summary: Recebe eventos do Stripe (uso interno)
+      description: |
+        Endpoint chamado pelo Stripe após eventos de pagamento.
+        **Não chamar diretamente.** Valida a assinatura via `STRIPE_WEBHOOK_SECRET`.
+
+        Eventos tratados:
+        - `checkout.session.completed` → cria `Purchase` com `status: COMPLETED`
+        - `charge.refunded` → atualiza `Purchase` para `status: REFUNDED`
+      parameters:
+        - in: header
+          name: stripe-signature
+          required: true
+          schema:
+            type: string
+          description: Assinatura HMAC do payload gerada pelo Stripe
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StripeWebhookEvent"
+      responses:
+        "200":
+          description: Evento processado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  received:
+                    type: boolean
+                    example: true
+        "400":
+          description: Assinatura inválida ou payload malformado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  # ── PRODUCTS ──────────────────────────────────────────────────────────────
+
+  /api/products:
+    get:
+      tags: [products]
+      summary: Lista produtos disponíveis para compra
+      description: Retorna apenas produtos ativos (`active: true`).
+      responses:
+        "200":
+          description: Lista de produtos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+              example:
+                - id: prod_guia_completo
+                  name: Guia Completo do Shaco AD
+                  description: Matchups completos, builds, runas e vídeos exclusivos.
+                  accessLevel: FULL
+                  price:
+                    amount: 4700
+                    currency: BRL
+                    formatted: R$ 47,00
+
+  # ── MATCHUPS ──────────────────────────────────────────────────────────────
+
+  /api/matchups:
+    get:
+      tags: [matchups]
+      summary: Lista todos os matchups disponíveis
+      description: |
+        Retorna a lista de matchups. Usuários sem `Purchase` recebem apenas
+        os matchups da amostra grátis (Viego, Diana, Jarvan IV, Kayn, Lee Sin).
+        Usuários com acesso FULL recebem todos os matchups.
+      security:
+        - sessionCookie: []
+      parameters:
+        - in: query
+          name: difficulty
+          schema:
+            type: string
+            enum: [Fácil, Médio, Difícil]
+          description: Filtra por dificuldade
+      responses:
+        "200":
+          description: Lista de matchups
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MatchupListResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /api/matchups/{champion}:
+    get:
+      tags: [matchups]
+      summary: Retorna detalhes de um matchup específico
+      description: |
+        Retorna todos os dados de um matchup (estratégia, dicas, detalhes, item sugestão).
+        Requer `Purchase` ativa, exceto para os campeões da amostra grátis.
+      security:
+        - sessionCookie: []
+      parameters:
+        - in: path
+          name: champion
+          required: true
+          schema:
+            type: string
+          description: Nome do campeão (exato, para o Data Dragon CDN)
+          example: Viego
+      responses:
+        "200":
+          description: Dados completos do matchup
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Matchup"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          description: Matchup não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              example:
+                error: NOT_FOUND
+                message: Matchup para o campeão 'Fiddlesticks' não encontrado.
+
+  # ── VIDEOS ────────────────────────────────────────────────────────────────
+
+  /api/videos:
+    get:
+      tags: [videos]
+      summary: Lista vídeos da biblioteca
+      description: |
+        Retorna vídeos disponíveis para o usuário. Requer `Purchase` ativa.
+        Os dados incluem `youtubeId` para embed do player.
+      security:
+        - sessionCookie: []
+      parameters:
+        - in: query
+          name: category
+          schema:
+            type: string
+            enum: [matchup, build, runa, geral]
+          description: Filtra por categoria de vídeo
+        - in: query
+          name: champion
+          schema:
+            type: string
+          description: Filtra vídeos relacionados a um campeão específico
+      responses:
+        "200":
+          description: Lista de vídeos
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VideoListResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+# ─────────────────────────────────────────────────────────────────────────────
+components:
+
+  securitySchemes:
+    sessionCookie:
+      type: apiKey
+      in: cookie
+      name: next-auth.session-token
+      description: Cookie de sessão gerenciado pelo Auth.js v5
+
+  # ── RESPONSES ─────────────────────────────────────────────────────────────
+
+  responses:
+    Unauthorized:
+      description: Não autenticado — sessão ausente ou expirada
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            error: UNAUTHORIZED
+            message: Você precisa estar logado para acessar este recurso.
+
+    Forbidden:
+      description: Autenticado mas sem Purchase ativa
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            error: FORBIDDEN
+            message: Você não possui acesso ao conteúdo pago.
+
+    BadRequest:
+      description: Dados da requisição inválidos
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ValidationError"
+
+    InternalError:
+      description: Erro interno do servidor
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            error: INTERNAL_ERROR
+            message: Ocorreu um erro inesperado. Tente novamente.
+
+  # ── SCHEMAS ───────────────────────────────────────────────────────────────
+
+  schemas:
+
+    Error:
+      type: object
+      required: [error, message]
+      properties:
+        error:
+          type: string
+          description: Código de erro em SNAKE_CASE
+          example: UNAUTHORIZED
+        message:
+          type: string
+          description: Mensagem legível por humanos
+          example: Você precisa estar logado.
+
+    ValidationError:
+      type: object
+      required: [error, message, issues]
+      properties:
+        error:
+          type: string
+          example: VALIDATION_ERROR
+        message:
+          type: string
+          example: Dados inválidos na requisição.
+        issues:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                example: productId
+              message:
+                type: string
+                example: productId é obrigatório.
+
+    Session:
+      type: object
+      properties:
+        user:
+          $ref: "#/components/schemas/UserSummary"
+        expires:
+          type: string
+          format: date-time
+
+    UserSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          example: clx123abc
+        name:
+          type: string
+          example: Davi Canuto
+        email:
+          type: string
+          format: email
+          example: davi@example.com
+        image:
+          type: string
+          format: uri
+          nullable: true
+
+    UserProfile:
+      allOf:
+        - $ref: "#/components/schemas/UserSummary"
+        - type: object
+          properties:
+            hasAccess:
+              type: boolean
+              description: True se o usuário possui uma Purchase com status COMPLETED
+              example: true
+            purchase:
+              $ref: "#/components/schemas/PurchaseSummary"
+              nullable: true
+
+    PurchaseSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          example: clx456def
+        productId:
+          type: string
+          example: prod_guia_completo
+        accessLevel:
+          type: string
+          enum: [FULL, BASIC]
+          example: FULL
+        status:
+          type: string
+          enum: [PENDING, COMPLETED, REFUNDED]
+          example: COMPLETED
+        createdAt:
+          type: string
+          format: date-time
+
+    OAuthProvider:
+      type: object
+      properties:
+        id:
+          type: string
+          example: google
+        name:
+          type: string
+          example: Google
+        type:
+          type: string
+          example: oauth
+        signinUrl:
+          type: string
+          example: /api/auth/signin/google
+        callbackUrl:
+          type: string
+          example: /api/auth/callback/google
+
+    Product:
+      type: object
+      required: [id, name, description, accessLevel, price]
+      properties:
+        id:
+          type: string
+          example: prod_guia_completo
+        name:
+          type: string
+          example: Guia Completo do Shaco AD
+        description:
+          type: string
+          example: Matchups completos, builds, runas e vídeos exclusivos.
+        accessLevel:
+          type: string
+          enum: [FULL, BASIC]
+          example: FULL
+        price:
+          type: object
+          properties:
+            amount:
+              type: integer
+              description: Valor em centavos
+              example: 4700
+            currency:
+              type: string
+              example: BRL
+            formatted:
+              type: string
+              example: "R$ 47,00"
+
+    CreateCheckoutSessionRequest:
+      type: object
+      required: [productId]
+      properties:
+        productId:
+          type: string
+          description: ID do produto (deve existir na tabela `Product`)
+          example: prod_guia_completo
+
+    CheckoutSessionResponse:
+      type: object
+      required: [checkoutUrl, sessionId]
+      properties:
+        checkoutUrl:
+          type: string
+          format: uri
+          description: URL do Stripe Checkout para redirecionar o usuário
+          example: https://checkout.stripe.com/pay/cs_test_abc123
+        sessionId:
+          type: string
+          example: cs_test_abc123
+
+    StripeWebhookEvent:
+      type: object
+      description: Payload bruto de evento do Stripe
+      properties:
+        id:
+          type: string
+          example: evt_1ABC123
+        type:
+          type: string
+          enum:
+            - checkout.session.completed
+            - charge.refunded
+          example: checkout.session.completed
+        data:
+          type: object
+          properties:
+            object:
+              type: object
+              description: Objeto Stripe relacionado ao evento (CheckoutSession ou Charge)
+
+    Matchup:
+      type: object
+      required: [champion, displayName, difficulty, estrategia, dicas]
+      properties:
+        champion:
+          type: string
+          description: Nome exato para o Data Dragon CDN
+          example: Viego
+        displayName:
+          type: string
+          example: Viego
+        difficulty:
+          type: string
+          enum: [Fácil, Médio, Difícil]
+          example: Fácil
+        iconUrl:
+          type: string
+          format: uri
+          description: URL do ícone do campeão no Data Dragon CDN
+          example: https://ddragon.leagueoflegends.com/cdn/15.5.1/img/champion/Viego.png
+        estrategia:
+          type: array
+          items:
+            type: string
+          example:
+            - Invade nível 3 — troca early é sua
+            - Caixinhas cancela W (Fauces Espectrais)
+        dicas:
+          type: array
+          items:
+            type: string
+          example:
+            - Invada campos da jungle para atrasar early game
+        detalhes:
+          type: array
+          items:
+            type: string
+          nullable: true
+        itemSugestao:
+          type: object
+          nullable: true
+          properties:
+            name:
+              type: string
+              example: Lâmina da Fúria Infinita
+            iconUrl:
+              type: string
+              format: uri
+              example: https://ddragon.leagueoflegends.com/cdn/15.5.1/img/item/3031.png
+        isFree:
+          type: boolean
+          description: True para os matchups da amostra grátis
+          example: true
+
+    MatchupListResponse:
+      type: object
+      required: [matchups, total, hasFullAccess]
+      properties:
+        matchups:
+          type: array
+          items:
+            $ref: "#/components/schemas/Matchup"
+        total:
+          type: integer
+          example: 5
+        hasFullAccess:
+          type: boolean
+          description: False se o usuário só vê a amostra grátis
+          example: false
+
+    Video:
+      type: object
+      required: [id, title, youtubeId, category]
+      properties:
+        id:
+          type: string
+          example: vid_abc123
+        title:
+          type: string
+          example: Como jogar Shaco vs Viego — Guia Completo
+        description:
+          type: string
+          nullable: true
+        youtubeId:
+          type: string
+          description: ID do vídeo no YouTube para embed
+          example: dQw4w9WgXcQ
+        thumbnailUrl:
+          type: string
+          format: uri
+          example: https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg
+        category:
+          type: string
+          enum: [matchup, build, runa, geral]
+          example: matchup
+        champion:
+          type: string
+          nullable: true
+          description: Campeão relacionado ao vídeo
+          example: Viego
+        duration:
+          type: integer
+          nullable: true
+          description: Duração em segundos
+          example: 847
+        publishedAt:
+          type: string
+          format: date-time
+
+    VideoListResponse:
+      type: object
+      required: [videos, total]
+      properties:
+        videos:
+          type: array
+          items:
+            $ref: "#/components/schemas/Video"
+        total:
+          type: integer
+          example: 12

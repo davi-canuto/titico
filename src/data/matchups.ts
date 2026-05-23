@@ -1,4 +1,4 @@
-import { Matchup } from '@/lib/types'
+import { Matchup } from '@/lib/matchup-types'
 
 export const matchups: Matchup[] = [
   {

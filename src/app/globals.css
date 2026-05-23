@@ -7,8 +7,10 @@
 :root {
   --red: #e3001b;
   --red-dark: #b50015;
+  --red-darkest: #900010;
   --bg: #0d0d0d;
   --bg-card: #161616;
+  --bg-section: #111111;
 }
 
 html {
@@ -18,9 +20,11 @@ html {
 body {
   background-color: #0d0d0d;
   color: #fff;
-  font-family: Arial, Helvetica, sans-serif;
 }
 
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: #111; }
 ::-webkit-scrollbar-thumb { background: #e3001b; border-radius: 3px; }
+
+.scrollbar-hide { scrollbar-width: none; }
+.scrollbar-hide::-webkit-scrollbar { display: none; }

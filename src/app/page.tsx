@@ -1,21 +1,26 @@
-import Header from '@/components/Header'
-import Hero from '@/components/Hero'
-import VideoSection from '@/components/VideoSection'
-import MatchupGrid from '@/components/MatchupGrid'
-import About from '@/components/About'
-import BuyGuide from '@/components/BuyGuide'
-import Footer from '@/components/Footer'
+import { auth } from '@/lib/auth'
+import LandingHeader from '@/components/landing/LandingHeader'
+import Hero from '@/components/landing/Hero'
+import VideoSection from '@/components/landing/VideoSection'
+import MatchupGrid from '@/components/landing/MatchupGrid'
+import About from '@/components/landing/About'
+import PricingSection from '@/components/landing/PricingSection'
+import LandingFooter from '@/components/landing/LandingFooter'
 
-export default function Home() {
+export default async function RootPage() {
+  const session = await auth()
+
   return (
-    <>
-      <Header />
-      <Hero />
-      <VideoSection />
-      <MatchupGrid />
-      <About />
-      <BuyGuide />
-      <Footer />
-    </>
+    <div className="bg-[#0d0d0d] text-white min-h-screen">
+      <LandingHeader isAuthenticated={!!session} />
+      <main className="pt-16">
+        <Hero />
+        <VideoSection />
+        <MatchupGrid />
+        <About />
+        <PricingSection />
+      </main>
+      <LandingFooter />
+    </div>
   )
 }

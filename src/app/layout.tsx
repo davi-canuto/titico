@@ -1,20 +1,31 @@
-import type { Metadata } from 'next'
-import './globals.css'
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+import QueryProvider from "@/components/providers/QueryProvider";
+
+const inter = Inter({ subsets: ["latin"], display: "swap" });
 
 export const metadata: Metadata = {
-  title: '🤡 Titiltei Guia 🤡',
-  description: 'Se torne um deus jogando de Shaco. Guia completo com matchups, builds e runas por Titiltei, Rank 1 Challenger BR.',
+  title: "Lobby do Titiltei",
+  description:
+    "O Lobby do Titiltei — módulos, matchups, builds, análises e coaching por Titiltei, Rank 1 Challenger BR.",
   openGraph: {
-    title: 'Titiltei — Guia do Shaco',
-    description: 'Se torne um deus jogando de Shaco.',
-    siteName: 'Titiltei',
+    title: "Lobby do Titiltei",
+    description: "O Lobby do Titiltei — suba de elo com Shaco.",
+    siteName: "Lobby do Titiltei",
   },
-}
+};
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="pt-BR">
-      <body className="antialiased">{children}</body>
+    <html lang="pt-BR" className="h-full">
+      <body className={`${inter.className} min-h-full flex flex-col antialiased`}>
+        <QueryProvider>{children}</QueryProvider>
+      </body>
     </html>
-  )
+  );
 }
