@@ -8,15 +8,7 @@ import { auth } from "@/lib/auth"
 import { userCanAccessContent } from "@/lib/access"
 import ProgressTracker from "@/components/platform/ProgressTracker"
 
-export const dynamicParams = true
-
-export async function generateStaticParams() {
-  const contents = await prisma.content.findMany({
-    where: { status: ContentStatus.PUBLISHED, active: true },
-    select: { slug: true },
-  })
-  return contents.map((c) => ({ slug: c.slug }))
-}
+export const dynamic = "force-dynamic"
 
 function durationToSeconds(duration: string | null | undefined): number {
   if (!duration) return 0
