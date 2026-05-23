@@ -6,6 +6,7 @@ import { createContent } from "@/lib/admin-actions"
 import { prisma } from "@/lib/prisma"
 import TitleSlugFields from "@/components/admin/TitleSlugFields"
 
+export const dynamic = "force-dynamic"
 const TYPE_INFO: Record<ContentType, { label: string; desc: string; icon: React.ReactNode }> = {
   VIDEO: {
     label: "Vídeo",

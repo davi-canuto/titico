@@ -15,6 +15,7 @@ import {
 } from "@/lib/admin-actions"
 import ConfirmButton from "@/components/admin/ConfirmButton"
 
+export const dynamic = "force-dynamic"
 const TYPE_LABELS: Record<string, string> = {
   VIDEO: "Vídeo",
   MATCHUP: "Matchup",

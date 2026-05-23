@@ -1,6 +1,8 @@
 import { prisma } from '@/lib/prisma'
 import PlanCarousel from '@/components/platform/PlanCarousel'
 
+export const dynamic = 'force-dynamic'
+
 async function getProducts() {
   try {
     const products = await prisma.product.findMany({

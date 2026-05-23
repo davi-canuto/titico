@@ -8,6 +8,7 @@ import { prisma } from '@/lib/prisma'
 import ContentCard from '@/components/platform/ContentCard'
 import RefundButton from '@/components/platform/RefundButton'
 
+export const dynamic = "force-dynamic"
 export default async function PerfilPage() {
   const session = await auth()
   if (!session?.user?.id) redirect('/login')

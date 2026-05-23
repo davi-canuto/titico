@@ -6,6 +6,7 @@ import ContentCard from "@/components/platform/ContentCard"
 import { ContentStatus, ContentType } from "@prisma/client"
 import { userCanAccessContent } from "@/lib/access"
 
+export const dynamic = "force-dynamic"
 const TYPE_LABELS: Record<ContentType, string> = {
   VIDEO:   "Vídeo",
   MATCHUP: "Matchup",
