@@ -24,7 +24,9 @@ export const authConfig: NextAuthConfig = {
     signIn: "/login",
   },
   callbacks: {
-    authorized({ auth: session }) {
+    authorized({ auth: session, request }) {
+      const pathname = request.nextUrl.pathname
+      if (pathname.startsWith('/api/')) return true
       return !!session
     },
     jwt({ token, user }) {

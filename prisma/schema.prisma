@@ -6,25 +6,22 @@ datasource db {
   provider = "postgresql"
 }
 
-// ─── Auth.js v5 required models ───────────────────────────────────────────────
-
 model User {
-  id            String       @id @default(cuid())
+  id            String         @id @default(cuid())
   name          String?
-  email         String       @unique
+  email         String         @unique
   emailVerified DateTime?
   image         String?
-  role          UserRole     @default(MEMBER)
+  role          UserRole       @default(MEMBER)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  heroSkin      String         @default("0")
   password      String?
-  heroSkin      String       @default("0")
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-
-  accounts  Account[]
-  sessions  Session[]
-  purchases Purchase[]
-  progress  UserProgress[]
-  bookmarks Bookmark[]
+  accounts      Account[]
+  bookmarks     Bookmark[]
+  purchases     Purchase[]
+  sessions      Session[]
+  progress      UserProgress[]
 }
 
 model Account {
@@ -40,8 +37,7 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -51,8 +47,7 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model VerificationToken {
@@ -63,90 +58,96 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-// ─── Domínio da aplicação ─────────────────────────────────────────────────────
-
 model Creator {
-  id          String   @id @default(cuid())
-  slug        String   @unique
+  id          String    @id @default(cuid())
+  slug        String    @unique
   name        String
   champion    String
   description String?
   avatarUrl   String?
   bannerUrl   String?
-  active      Boolean  @default(true)
-  createdAt   DateTime @default(now())
-
-  products Product[]
-  contents Content[]
+  active      Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  contents    Content[]
+  products    Product[]
 }
 
 model Purchase {
   id              String         @id @default(cuid())
-  userId          String
+  userId          String?
+  guestEmail      String?
   stripeSessionId String         @unique
   stripePaymentId String?
   productId       String
   status          PurchaseStatus @default(PENDING)
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
+  booking         Booking?
+  product         Product        @relation(fields: [productId], references: [id])
+  user            User?          @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
 
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  product Product @relation(fields: [productId], references: [id])
-
-  @@unique([userId, productId])
+model Booking {
+  id            String        @id @default(cuid())
+  purchaseId    String?       @unique
+  calBookingId  String        @unique
+  scheduledAt   DateTime
+  attendeeName  String
+  attendeeEmail String
+  status        BookingStatus @default(PENDING)
+  notes         String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  purchase      Purchase?     @relation(fields: [purchaseId], references: [id])
 }
 
 model Product {
-  id            String      @id @default(cuid())
-  name          String
-  description   String
-  features      String[]    @default([])
-  price         Int         // centavos (ex: 4700 = R$ 47,00)
-  stripePriceId String?     @unique
-  active        Boolean     @default(true)
-  createdAt     DateTime    @default(now())
-
-  creatorId String
-  creator   Creator @relation(fields: [creatorId], references: [id])
-
-  purchases Purchase[]
-  contents  ContentProduct[]
+  id               String           @id @default(cuid())
+  name             String
+  description      String
+  stripePriceId    String?          @unique
+  active           Boolean          @default(true)
+  createdAt        DateTime         @default(now())
+  price            Int
+  features         String[]         @default([])
+  creatorId        String
+  downloadUrl      String?
+  downloadPassword String?
+  calSlug          String?
+  contents         ContentProduct[]
+  creator          Creator          @relation(fields: [creatorId], references: [id])
+  purchases        Purchase[]
 }
 
-// ─── Plataforma de conteúdo ───────────────────────────────────────────────────
-
 model Content {
-  id          String        @id @default(cuid())
+  id          String           @id @default(cuid())
   type        ContentType
   title       String
-  slug        String        @unique
+  slug        String           @unique
   thumbnail   String?
-  status      ContentStatus @default(DRAFT)
+  status      ContentStatus    @default(DRAFT)
   publishedAt DateTime?
-  active      Boolean       @default(true)
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-
-  creatorId String
-  creator   Creator @relation(fields: [creatorId], references: [id])
-
-  video     VideoMeta?
-  matchup   MatchupMeta?
-  build     BuildMeta?
-  article   ArticleMeta?
-  file      FileMeta?
-  trails    TrailItem[]
-  progress  UserProgress[]
-  bookmarks Bookmark[]
-  products  ContentProduct[]
+  active      Boolean          @default(true)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  creatorId   String
+  article     ArticleMeta?
+  bookmarks   Bookmark[]
+  build       BuildMeta?
+  creator     Creator          @relation(fields: [creatorId], references: [id])
+  products    ContentProduct[]
+  file        FileMeta?
+  matchup     MatchupMeta?
+  trails      TrailItem[]
+  progress    UserProgress[]
+  video       VideoMeta?
 }
 
 model ContentProduct {
   contentId String
   productId String
-
-  content Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
-  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  content   Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@id([contentId, productId])
 }
@@ -156,8 +157,7 @@ model VideoMeta {
   contentId String  @unique
   youtubeId String
   duration  String?
-
-  content Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  content   Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
 }
 
 model MatchupMeta {
@@ -168,8 +168,7 @@ model MatchupMeta {
   tips           String[]
   strategy       String
   itemSuggestion String?
-
-  content Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  content        Content    @relation(fields: [contentId], references: [id], onDelete: Cascade)
 }
 
 model BuildMeta {
@@ -179,48 +178,43 @@ model BuildMeta {
   items     String[]
   runes     String[]
   notes     String?
-
-  content Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  content   Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
 }
 
 model ArticleMeta {
-  id        String @id @default(cuid())
-  contentId String @unique
+  id        String  @id @default(cuid())
+  contentId String  @unique
   body      String
-
-  content Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  content   Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
 }
 
 model FileMeta {
-  id        String @id @default(cuid())
-  contentId String @unique
+  id        String  @id @default(cuid())
+  contentId String  @unique
   url       String
   sizeBytes Int?
-
-  content Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  content   Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
 }
 
 model Trail {
-  id          String   @id @default(cuid())
+  id          String      @id @default(cuid())
   title       String
-  slug        String   @unique
+  slug        String      @unique
   description String?
   thumbnail   String?
-  active      Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  items TrailItem[]
+  active      Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  items       TrailItem[]
 }
 
 model TrailItem {
-  id        String @id @default(cuid())
+  id        String  @id @default(cuid())
   trailId   String
   contentId String
   order     Int
-
-  trail   Trail   @relation(fields: [trailId], references: [id], onDelete: Cascade)
-  content Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  content   Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  trail     Trail   @relation(fields: [trailId], references: [id], onDelete: Cascade)
 
   @@unique([trailId, contentId])
   @@unique([trailId, order])
@@ -231,9 +225,8 @@ model Bookmark {
   userId    String
   contentId String
   createdAt DateTime @default(now())
-
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  content Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  content   Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, contentId])
 }
@@ -245,14 +238,11 @@ model UserProgress {
   watchedSeconds Int?
   completedAt    DateTime?
   updatedAt      DateTime  @updatedAt
-
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  content Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  content        Content   @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, contentId])
 }
-
-// ─── Enums ────────────────────────────────────────────────────────────────────
 
 enum UserRole {
   MEMBER
@@ -281,5 +271,12 @@ enum Difficulty {
 enum PurchaseStatus {
   PENDING
   COMPLETED
+  REFUNDED
+}
+
+enum BookingStatus {
+  PENDING
+  COMPLETED
+  POSTPONED
   REFUNDED
 }

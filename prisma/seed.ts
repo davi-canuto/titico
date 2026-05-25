@@ -20,42 +20,55 @@ async function main() {
   })
 
   // ── Produtos ──────────────────────────────────────────────────────────────────
+  // Apaga purchases antes para não violar FK
   await prisma.purchase.deleteMany()
   await prisma.product.deleteMany()
+
   await prisma.product.createMany({
     data: [
       {
-        name: "PDF",
-        description: "Material em PDF com guias, matchups e builds para consulta offline.",
-        price: 2990,
+        id: "prod_pdf_guia_shaco_ad",
+        name: "PDF Guia Shaco AD",
+        description: "Guia completo de Shaco AD em PDF: matchups, builds situacionais, rota e psicologia. Estude no seu ritmo, offline.",
+        features: [
+          "Matchups detalhados contra os 20 junglers mais jogados",
+          "Builds situacionais com justificativas",
+          "Rota de farm otimizada por situação",
+          "Cheatsheet de runas e summoners",
+        ],
+        price: 2990, // R$ 29,90
+        active: true,
+        creatorId: titiltei.id,
+        downloadUrl: "https://drive.google.com/file/d/COLOQUE_O_ID_DO_ARQUIVO_AQUI/view",
+        downloadPassword: "COLOQUE_A_SENHA_AQUI",
+      },
+      {
+        id: "prod_analise_de_partida",
+        calSlug: "",
+        name: "Análise de Partida",
+        description: "Manda o ID da sua partida e o Titiltei analisa onde você errou, o que melhorar e quais hábitos mudar.",
+        features: [
+          "Análise VOD da sua partida completa",
+          "Feedback escrito detalhado por fase do jogo",
+          "Lista de prioridades para melhorar",
+          "Entregue em até 48h",
+        ],
+        price: 9700, // R$ 97,00
         active: true,
         creatorId: titiltei.id,
       },
       {
-        name: "Módulos",
-        description: "Videoaulas completas de jungle: rota, invade, macro e decisão de jogo.",
-        price: 6700,
-        active: true,
-        creatorId: titiltei.id,
-      },
-      {
-        name: "Análise de Gameplay",
-        description: "Análise personalizada da sua gameplay com feedback detalhado por Titiltei.",
-        price: 9700,
-        active: true,
-        creatorId: titiltei.id,
-      },
-      {
-        name: "Coach",
-        description: "Sessão de coaching ao vivo com Titiltei para acelerar sua evolução.",
-        price: 19700,
-        active: true,
-        creatorId: titiltei.id,
-      },
-      {
-        name: "Acesso ao Lobby do Titiltei",
-        description: "Acesso completo e atualizado a toda a plataforma para subir de elo.",
-        price: 4700,
+        id: "prod_coaching_1x1",
+        name: "Coaching 1:1",
+        calSlug: "davi-alessandro-fsfg2x/coach-1-1",
+        description: "Sessão ao vivo com o Titiltei focada no seu jogo. Você joga, ele observa e aponta em tempo real o que mudar.",
+        features: [
+          "Sessão de 60 minutos ao vivo",
+          "Análise em tempo real enquanto você joga",
+          "Plano de melhoria personalizado",
+          "Link de agendamento enviado após confirmação do pagamento",
+        ],
+        price: 19700, // R$ 197,00
         active: true,
         creatorId: titiltei.id,
       },
@@ -380,7 +393,7 @@ Isso é Shaco.`,
   }
 
   const total = videoContents.length + matchupContents.length + buildContents.length + 1
-  console.log(`✅ Seed completo: 5 produtos, ${total} conteúdos, 3 trilhas`)
+  console.log(`✅ Seed completo: 3 produtos, ${total} conteúdos, 3 trilhas`)
 }
 
 main()

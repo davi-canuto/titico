@@ -6,7 +6,7 @@ import Link from 'next/link'
 const navLinks = [
   { label: 'Matchups', href: '#matchups' },
   { label: 'Sobre', href: '#sobre' },
-  { label: 'Planos', href: '#pricing' },
+  { label: 'Produtos', href: '#pricing' },
 ]
 
 interface Props {

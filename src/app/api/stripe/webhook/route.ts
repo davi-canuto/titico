@@ -26,10 +26,11 @@ export async function POST(req: NextRequest) {
 
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session
-    const userId = session.metadata?.userId
+    const userId = session.metadata?.userId || null
     const productId = session.metadata?.productId
+    const guestEmail = userId ? null : (session.customer_details?.email ?? null)
 
-    if (!userId || !productId) {
+    if (!productId) {
       return NextResponse.json({ error: "Missing metadata" }, { status: 400 })
     }
 
@@ -37,6 +38,7 @@ export async function POST(req: NextRequest) {
       where: { stripeSessionId: session.id },
       create: {
         userId,
+        guestEmail,
         productId,
         stripeSessionId: session.id,
         stripePaymentId: typeof session.payment_intent === "string" ? session.payment_intent : null,

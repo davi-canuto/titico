@@ -182,6 +182,12 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
         <Link href="/dashboard/admin?tab=criadores" className={tabCls("criadores")}>
           Criadores
         </Link>
+        <Link href="/dashboard/admin/pagamentos" className={tabCls("pagamentos")}>
+          Pagamentos
+        </Link>
+        <Link href="/dashboard/admin/agendamentos" className={tabCls("agendamentos")}>
+          Agendamentos
+        </Link>
       </div>
 
       {/* Conteúdos tab */}

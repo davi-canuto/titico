@@ -164,7 +164,14 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
             </form>
           </div>
 
-          <p className="text-center text-white/30 text-xs mt-6">
+          <p className="text-center text-white/40 text-sm mt-6">
+            Não tem conta?{" "}
+            <a href="/register" className="text-white hover:text-[#e3001b] transition-colors font-semibold">
+              Criar conta
+            </a>
+          </p>
+
+          <p className="text-center text-white/30 text-xs mt-3">
             Ao entrar, você concorda com os termos de uso
           </p>
         </div>

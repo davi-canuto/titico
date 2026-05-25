@@ -118,7 +118,7 @@ export default async function PagamentosPage({ searchParams }: PagamentosPagePro
                 {page.map((purchase) => (
                   <tr key={purchase.id} className="bg-[#0d0d0d] hover:bg-[#111] transition-colors">
                     <td className={cellCls}>
-                      <span className="font-mono text-xs text-white/60">{purchase.user.email}</span>
+                      <span className="font-mono text-xs text-white/60">{purchase.user?.email ?? purchase.guestEmail ?? '—'}</span>
                     </td>
                     <td className={cellCls}>{purchase.product.name}</td>
                     <td className={cellCls}>

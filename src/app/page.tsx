@@ -1,6 +1,8 @@
 import { auth } from '@/lib/auth'
+import { prisma } from '@/lib/prisma'
 import LandingHeader from '@/components/landing/LandingHeader'
 import Hero from '@/components/landing/Hero'
+import ProductsCTA from '@/components/landing/ProductsCTA'
 import VideoSection from '@/components/landing/VideoSection'
 import MatchupGrid from '@/components/landing/MatchupGrid'
 import About from '@/components/landing/About'
@@ -8,13 +10,22 @@ import PricingSection from '@/components/landing/PricingSection'
 import LandingFooter from '@/components/landing/LandingFooter'
 
 export default async function RootPage() {
-  const session = await auth()
+  const [session, products] = await Promise.all([
+    auth(),
+    prisma.product.findMany({
+      where: { active: true },
+      select: { id: true, calSlug: true },
+    }),
+  ])
+
+  const calSlugs = Object.fromEntries(products.map((p) => [p.id, p.calSlug ?? '']))
 
   return (
     <div className="bg-[#0d0d0d] text-white min-h-screen">
       <LandingHeader isAuthenticated={!!session} />
       <main className="pt-16">
         <Hero />
+        <ProductsCTA isAuthenticated={!!session} calSlugs={calSlugs} />
         <VideoSection />
         <MatchupGrid />
         <About />

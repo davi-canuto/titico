@@ -7,7 +7,6 @@ const AUTH_PROTECTED_PREFIXES = [
   "/api/matchups/",
   "/api/videos/",
   "/api/user/",
-  "/api/checkout/",
   "/api/contents/",
 ]
 

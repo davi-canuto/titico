@@ -5,15 +5,15 @@ import { prisma } from "@/lib/prisma"
 import { getStripe, buildPaymentIntentData } from "@/lib/stripe"
 import { PurchaseStatus } from "@prisma/client"
 
-const bodySchema = z.object({ productId: z.string().min(1) })
+const bodySchema = z.object({
+  productId: z.string().min(1),
+})
 
 const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"
 
 export async function POST(req: NextRequest) {
   const session = await auth()
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 })
-  }
+  const userId = session?.user?.id ?? null
 
   const body = await req.json()
   const parsed = bodySchema.safeParse(body)
@@ -22,7 +22,6 @@ export async function POST(req: NextRequest) {
   }
 
   const { productId } = parsed.data
-  const userId = session.user.id
 
   const product = await prisma.product.findFirst({
     where: { id: productId, active: true },
@@ -31,11 +30,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "VALIDATION_ERROR", issues: [{ message: "Product not found" }] }, { status: 400 })
   }
 
-  const existing = await prisma.purchase.findFirst({
-    where: { userId, productId, status: PurchaseStatus.COMPLETED },
-  })
-  if (existing) {
-    return NextResponse.json({ error: "ALREADY_PURCHASED" }, { status: 409 })
+  if (userId) {
+    const existing = await prisma.purchase.findFirst({
+      where: { userId, productId, status: PurchaseStatus.COMPLETED },
+    })
+    if (existing) {
+      return NextResponse.json({ error: "ALREADY_PURCHASED" }, { status: 409 })
+    }
   }
 
   const paymentIntentData = buildPaymentIntentData(product.price)
@@ -54,10 +55,12 @@ export async function POST(req: NextRequest) {
           },
         },
       ],
-      success_url: `${appUrl}/checkout/sucesso?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: product.calSlug
+        ? `${appUrl}/checkout/sucesso?session_id={CHECKOUT_SESSION_ID}&calSlug=${encodeURIComponent(product.calSlug)}`
+        : `${appUrl}/checkout/sucesso?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${appUrl}/checkout/cancelado`,
-      metadata: { userId, productId },
-      ...(paymentIntentData ? { payment_intent_data: paymentIntentData } : {}),
+      metadata: { productId, ...(userId ? { userId } : {}) },
+      payment_intent_data: paymentIntentData,
     })
   } catch (err) {
     console.error("[checkout/session] Stripe error:", err)

@@ -16,6 +16,7 @@ export async function GET(req: NextRequest) {
     id: product.id,
     name: product.name,
     description: product.description,
+    calSlug: product.calSlug ?? null,
     creator: product.creator,
     price: {
       amount: product.price,
