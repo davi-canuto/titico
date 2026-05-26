@@ -28,6 +28,7 @@ async function main() {
     data: [
       {
         id: "prod_pdf_guia_shaco_ad",
+        slug: "guia-shaco-ad",
         name: "PDF Guia Shaco AD",
         description: "Guia completo de Shaco AD em PDF: matchups, builds situacionais, rota e psicologia. Estude no seu ritmo, offline.",
         features: [
@@ -44,6 +45,7 @@ async function main() {
       },
       {
         id: "prod_analise_de_partida",
+        slug: "analise-de-partida",
         calSlug: "",
         name: "Análise de Partida",
         description: "Manda o ID da sua partida e o Titiltei analisa onde você errou, o que melhorar e quais hábitos mudar.",
@@ -59,6 +61,7 @@ async function main() {
       },
       {
         id: "prod_coaching_1x1",
+        slug: "coaching-1x1",
         name: "Coaching 1:1",
         calSlug: "davi-alessandro-fsfg2x/coach-1-1",
         description: "Sessão ao vivo com o Titiltei focada no seu jogo. Você joga, ele observa e aponta em tempo real o que mudar.",
