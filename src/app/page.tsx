@@ -16,7 +16,7 @@ export default async function RootPage() {
     auth(),
     prisma.product.findMany({
       where: { active: true },
-      select: { id: true, calSlug: true },
+      select: { id: true, slug: true, calSlug: true },
     }),
     prisma.product.findUnique({
       where: { slug: PDF_PRODUCT_SLUG, active: true },
@@ -24,14 +24,14 @@ export default async function RootPage() {
     }),
   ])
 
-  const calSlugs = Object.fromEntries(products.map((p) => [p.id, p.calSlug ?? '']))
+  const productsBySlug = Object.fromEntries(products.map((p) => [p.slug, { id: p.id, calSlug: p.calSlug ?? '' }]))
 
   return (
     <div className="bg-[#0d0d0d] text-white min-h-screen">
       <LandingHeader isAuthenticated={!!session} />
       <main className="pt-16">
         <Hero />
-        <ProductsCTA isAuthenticated={!!session} calSlugs={calSlugs} pdfProductId={pdfProduct?.id ?? null} />
+        <ProductsCTA isAuthenticated={!!session} productsBySlug={productsBySlug} pdfProductId={pdfProduct?.id ?? null} />
         <VideoSection />
         <MatchupGrid />
         <About />

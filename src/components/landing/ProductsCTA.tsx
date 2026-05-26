@@ -38,16 +38,16 @@ const ArrowIcon = () => (
 
 interface Props {
   isAuthenticated: boolean
-  calSlugs: Record<string, string>
+  productsBySlug: Record<string, { id: string; calSlug: string }>
   pdfProductId: string | null
 }
 
-export default function ProductsCTA({ isAuthenticated, calSlugs, pdfProductId }: Props) {
+export default function ProductsCTA({ isAuthenticated, productsBySlug, pdfProductId }: Props) {
   const [pdfModalOpen, setPdfModalOpen] = useState(false)
   const [bookingModal, setBookingModal] = useState<{ productId: string; calSlug: string; productName: string } | null>(null)
 
-  const coachingSlug = calSlugs['prod_coaching_1x1'] ?? ''
-  const analiseSlug = calSlugs['prod_analise_de_partida'] ?? ''
+  const coaching = productsBySlug['coaching-1x1']
+  const analise = productsBySlug['analise-partida']
 
   return (
     <section className="py-20 bg-[#111111]">
@@ -72,8 +72,8 @@ export default function ProductsCTA({ isAuthenticated, calSlugs, pdfProductId }:
               <p className="text-white/70 text-sm leading-relaxed">Sessão individual com o Titiltei. Foco total no seu jogo.</p>
             </div>
             <button
-              onClick={() => coachingSlug && setBookingModal({ productId: 'prod_coaching_1x1', calSlug: coachingSlug, productName: 'Coaching 1:1' })}
-              disabled={!coachingSlug}
+              onClick={() => coaching?.calSlug && setBookingModal({ productId: coaching.id, calSlug: coaching.calSlug, productName: 'Coaching 1:1' })}
+              disabled={!coaching?.calSlug}
               className="inline-flex items-center justify-center gap-2 bg-[#e3001b] hover:bg-[#b50015] active:bg-[#900010] text-white font-black uppercase tracking-wider text-sm px-4 py-2.5 rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             >
               Agendar <ArrowIcon />
@@ -90,8 +90,8 @@ export default function ProductsCTA({ isAuthenticated, calSlugs, pdfProductId }:
               <p className="text-white/70 text-sm leading-relaxed">Manda sua partida, o Titiltei analisa e te diz o que melhorar.</p>
             </div>
             <button
-              onClick={() => analiseSlug && setBookingModal({ productId: 'prod_analise_de_partida', calSlug: analiseSlug, productName: 'Análise de Partida' })}
-              disabled={!analiseSlug}
+              onClick={() => analise?.calSlug && setBookingModal({ productId: analise.id, calSlug: analise.calSlug, productName: 'Análise de Partida' })}
+              disabled={!analise?.calSlug}
               className="inline-flex items-center justify-center gap-2 border border-white/25 hover:border-white active:bg-white/10 text-white font-black uppercase tracking-wider text-sm px-4 py-2.5 rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             >
               Agendar <ArrowIcon />
