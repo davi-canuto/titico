@@ -4,8 +4,6 @@ import { useState } from 'react'
 import PdfPaymentModal from './PdfPaymentModal'
 import BookingPaymentModal from './BookingPaymentModal'
 
-const PDF_PRODUCT_ID = 'prod_pdf_guia_shaco_ad'
-
 
 const CoachingIcon = () => (
   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -41,9 +39,10 @@ const ArrowIcon = () => (
 interface Props {
   isAuthenticated: boolean
   calSlugs: Record<string, string>
+  pdfProductId: string | null
 }
 
-export default function ProductsCTA({ isAuthenticated, calSlugs }: Props) {
+export default function ProductsCTA({ isAuthenticated, calSlugs, pdfProductId }: Props) {
   const [pdfModalOpen, setPdfModalOpen] = useState(false)
   const [bookingModal, setBookingModal] = useState<{ productId: string; calSlug: string; productName: string } | null>(null)
 
@@ -109,8 +108,8 @@ export default function ProductsCTA({ isAuthenticated, calSlugs }: Props) {
               <p className="text-white/70 text-sm leading-relaxed">Material completo em PDF para estudar no seu ritmo.</p>
             </div>
             <button
-              onClick={() => setPdfModalOpen(true)}
-              disabled={false}
+              onClick={() => pdfProductId && setPdfModalOpen(true)}
+              disabled={!pdfProductId}
               className="inline-flex items-center justify-center gap-2 border border-white/25 hover:border-white active:bg-white/10 text-white font-black uppercase tracking-wider text-sm px-4 py-2.5 rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             >
               Comprar <ArrowIcon />
@@ -123,7 +122,7 @@ export default function ProductsCTA({ isAuthenticated, calSlugs }: Props) {
       <PdfPaymentModal
         open={pdfModalOpen}
         onClose={() => setPdfModalOpen(false)}
-        productId={PDF_PRODUCT_ID}
+        productId={pdfProductId ?? ''}
         isAuthenticated={isAuthenticated}
       />
 

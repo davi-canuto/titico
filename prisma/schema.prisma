@@ -103,6 +103,7 @@ model Booking {
 
 model Product {
   id               String           @id @default(cuid())
+  slug             String           @unique
   name             String
   description      String
   stripePriceId    String?          @unique

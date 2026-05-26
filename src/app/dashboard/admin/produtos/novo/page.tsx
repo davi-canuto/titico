@@ -50,11 +50,30 @@ export default async function NovoProdutoPage({ searchParams }: PageProps) {
           Selecione um criador.
         </div>
       )}
+      {error === "slug" && (
+        <div className="mb-6 rounded-lg border border-[#ef4444]/30 bg-[#ef4444]/10 px-4 py-3 text-sm text-[#ef4444]">
+          Slug inválido ou já em uso por outro produto.
+        </div>
+      )}
 
       <form action={createProduct} className="flex flex-col gap-5">
         <div>
           <label className={labelCls} htmlFor="name">Nome *</label>
-          <input id="name" name="name" type="text" required placeholder="Coaching 1:1" className={inputCls} />
+          <input
+            id="name"
+            name="name"
+            type="text"
+            required
+            placeholder="Coaching 1:1"
+            className={inputCls}
+            onInput="document.getElementById('slug').value = this.value.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'')"
+          />
+        </div>
+
+        <div>
+          <label className={labelCls} htmlFor="slug">Slug *</label>
+          <input id="slug" name="slug" type="text" required placeholder="coaching-1x1" className={inputCls} />
+          <p className="mt-1 text-xs text-white/30">Identificador único usado internamente (ex: guia-shaco-ad)</p>
         </div>
 
         <div>

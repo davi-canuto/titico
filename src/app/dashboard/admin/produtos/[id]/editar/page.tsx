@@ -59,6 +59,12 @@ export default async function EditarProdutoPage({ params, searchParams }: PagePr
         </div>
       )}
 
+      {error === "slug" && (
+        <div className="mb-6 rounded-lg border border-[#ef4444]/30 bg-[#ef4444]/10 px-4 py-3 text-sm text-[#ef4444]">
+          Slug inválido ou já em uso por outro produto.
+        </div>
+      )}
+
       <form action={updateProduct.bind(null, product.id)} className="flex flex-col gap-5">
         <div>
           <label className={labelCls} htmlFor="name">Nome</label>
@@ -70,6 +76,19 @@ export default async function EditarProdutoPage({ params, searchParams }: PagePr
             defaultValue={product.name}
             className={inputCls}
           />
+        </div>
+
+        <div>
+          <label className={labelCls} htmlFor="slug">Slug *</label>
+          <input
+            id="slug"
+            name="slug"
+            type="text"
+            required
+            defaultValue={product.slug}
+            className={inputCls}
+          />
+          <p className="mt-1 text-xs text-white/30">Identificador único usado internamente (ex: guia-shaco-ad)</p>
         </div>
 
         <div>

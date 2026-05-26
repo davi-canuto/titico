@@ -292,6 +292,7 @@ export async function createProduct(formData: FormData) {
   if (error) redirect("/login")
 
   const name = (formData.get("name") as string).trim()
+  const slug = (formData.get("slug") as string).trim()
   const description = (formData.get("description") as string).trim()
   const priceRaw = (formData.get("price") as string).replace(",", ".")
   const features = (formData.get("features") as string)
@@ -304,13 +305,18 @@ export async function createProduct(formData: FormData) {
   const downloadPassword = ((formData.get("downloadPassword") as string) || "").trim() || null
 
   if (!name) redirect("/dashboard/admin/produtos/novo?error=nome")
+  if (!slug) redirect("/dashboard/admin/produtos/novo?error=slug")
 
   const priceReais = parseFloat(priceRaw)
   if (isNaN(priceReais) || priceReais <= 0) redirect("/dashboard/admin/produtos/novo?error=preco")
   if (!creatorId) redirect("/dashboard/admin/produtos/novo?error=criador")
 
+  const existing = await prisma.product.findUnique({ where: { slug } })
+  if (existing) redirect("/dashboard/admin/produtos/novo?error=slug")
+
   await prisma.product.create({
     data: {
+      slug,
       name,
       description,
       features,
@@ -333,6 +339,7 @@ export async function updateProduct(id: string, formData: FormData) {
   if (error) redirect("/login")
 
   const name = (formData.get("name") as string).trim()
+  const slug = (formData.get("slug") as string).trim()
   const description = (formData.get("description") as string).trim()
   const priceRaw = (formData.get("price") as string).replace(",", ".")
   const features = (formData.get("features") as string)
@@ -345,15 +352,20 @@ export async function updateProduct(id: string, formData: FormData) {
   const downloadPassword = ((formData.get("downloadPassword") as string) || "").trim() || null
 
   if (!name) redirect(`/dashboard/admin/produtos/${id}/editar?error=nome`)
+  if (!slug) redirect(`/dashboard/admin/produtos/${id}/editar?error=slug`)
 
   const priceReais = parseFloat(priceRaw)
   if (isNaN(priceReais) || priceReais <= 0) {
     redirect(`/dashboard/admin/produtos/${id}/editar?error=preco`)
   }
 
+  const existing = await prisma.product.findFirst({ where: { slug, id: { not: id } } })
+  if (existing) redirect(`/dashboard/admin/produtos/${id}/editar?error=slug`)
+
   await prisma.product.update({
     where: { id },
     data: {
+      slug,
       name,
       description,
       features,

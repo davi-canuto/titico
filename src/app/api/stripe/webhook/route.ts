@@ -3,6 +3,7 @@ import { getStripe } from "@/lib/stripe"
 import { prisma } from "@/lib/prisma"
 import { PurchaseStatus } from "@prisma/client"
 import type Stripe from "stripe"
+import { sendPdfDelivery } from "@/lib/email/send"
 
 export async function POST(req: NextRequest) {
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
@@ -34,6 +35,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing metadata" }, { status: 400 })
     }
 
+    const product = await prisma.product.findUnique({ where: { id: productId } })
+
     await prisma.purchase.upsert({
       where: { stripeSessionId: session.id },
       create: {
@@ -49,6 +52,19 @@ export async function POST(req: NextRequest) {
         stripePaymentId: typeof session.payment_intent === "string" ? session.payment_intent : undefined,
       },
     })
+
+    if (product?.downloadUrl) {
+      let buyerEmail: string | null = guestEmail ?? session.customer_details?.email ?? null
+      if (userId && !buyerEmail) {
+        const user = await prisma.user.findUnique({ where: { id: userId }, select: { email: true } })
+        buyerEmail = user?.email ?? null
+      }
+      if (buyerEmail) {
+        await sendPdfDelivery(buyerEmail, product.downloadUrl, product.downloadPassword ?? undefined)
+      } else {
+        console.error("[stripe/webhook] PDF product purchased but buyer email not found — skipping delivery email")
+      }
+    }
   } else if (event.type === "charge.refunded") {
     const charge = event.data.object as Stripe.Charge
     if (charge.payment_intent && typeof charge.payment_intent === "string") {
