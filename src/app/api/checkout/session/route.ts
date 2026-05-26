@@ -9,7 +9,7 @@ const bodySchema = z.object({
   productId: z.string().min(1),
 })
 
-const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"
+const appUrl = process.env.APP_URL ?? "http://localhost:3000"
 
 export async function POST(req: NextRequest) {
   const session = await auth()

@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import bcrypt from "bcryptjs"
 import { prisma } from "@/lib/prisma"
-import { sendWelcomeEmail } from "@/lib/email/send"
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -42,8 +41,6 @@ export async function POST(req: NextRequest) {
       data: { name: name.trim(), email, password: hashed },
       select: { id: true, email: true, name: true },
     })
-
-    void sendWelcomeEmail(email, name.trim())
 
     return NextResponse.json(user, { status: 201 })
   } catch (err: unknown) {
