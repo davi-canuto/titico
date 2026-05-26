@@ -10,6 +10,7 @@ import {
   toggleTrail,
   deleteTrail,
   toggleProduct,
+  deleteProduct,
   createCreator,
   toggleCreatorActive,
 } from "@/lib/admin-actions"
@@ -384,6 +385,15 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
       {/* Produtos tab */}
       {activeTab === "produtos" && (
         <div className="flex flex-col gap-4">
+          <div className="flex justify-end">
+            <Link
+              href="/dashboard/admin/produtos/novo"
+              className="rounded-lg bg-[#e3001b] px-4 py-2 text-xs font-black uppercase tracking-wider text-white transition-colors hover:bg-[#b50015]"
+            >
+              + Novo produto
+            </Link>
+          </div>
+
           {products.length === 0 ? (
             <div className="rounded-xl border border-white/5 bg-[#161616] py-16 text-center">
               <p className="text-sm text-white/30">Nenhum produto cadastrado</p>
@@ -439,6 +449,15 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                             >
                               {p.active ? "Desativar" : "Ativar"}
                             </button>
+                          </form>
+                          <span className="text-white/20">·</span>
+                          <form action={deleteProduct.bind(null, p.id)}>
+                            <ConfirmButton
+                              message={`Deletar "${p.name}"? Esta ação não pode ser desfeita.`}
+                              className="text-xs text-[#ef4444] hover:underline"
+                            >
+                              Deletar
+                            </ConfirmButton>
                           </form>
                         </div>
                       </td>

@@ -287,6 +287,47 @@ export async function toggleProduct(id: string, active: boolean) {
   revalidatePath("/dashboard/admin")
 }
 
+export async function createProduct(formData: FormData) {
+  const { error } = await requireAdmin()
+  if (error) redirect("/login")
+
+  const name = (formData.get("name") as string).trim()
+  const description = (formData.get("description") as string).trim()
+  const priceRaw = (formData.get("price") as string).replace(",", ".")
+  const features = (formData.get("features") as string)
+    .split("\n")
+    .map((f) => f.trim())
+    .filter(Boolean)
+  const creatorId = (formData.get("creatorId") as string).trim()
+  const calSlug = ((formData.get("calSlug") as string) || "").trim() || null
+  const downloadUrl = ((formData.get("downloadUrl") as string) || "").trim() || null
+  const downloadPassword = ((formData.get("downloadPassword") as string) || "").trim() || null
+
+  if (!name) redirect("/dashboard/admin/produtos/novo?error=nome")
+
+  const priceReais = parseFloat(priceRaw)
+  if (isNaN(priceReais) || priceReais <= 0) redirect("/dashboard/admin/produtos/novo?error=preco")
+  if (!creatorId) redirect("/dashboard/admin/produtos/novo?error=criador")
+
+  await prisma.product.create({
+    data: {
+      name,
+      description,
+      features,
+      price: Math.round(priceReais * 100),
+      creatorId,
+      calSlug,
+      downloadUrl,
+      downloadPassword,
+      active: true,
+    },
+  })
+
+  revalidatePath("/")
+  revalidatePath("/dashboard/admin")
+  redirect("/dashboard/admin?tab=produtos")
+}
+
 export async function updateProduct(id: string, formData: FormData) {
   const { error } = await requireAdmin()
   if (error) redirect("/login")
@@ -299,6 +340,9 @@ export async function updateProduct(id: string, formData: FormData) {
     .map((f) => f.trim())
     .filter(Boolean)
   const creatorIdRaw = (formData.get("creatorId") as string | null)?.trim()
+  const calSlug = ((formData.get("calSlug") as string) || "").trim() || null
+  const downloadUrl = ((formData.get("downloadUrl") as string) || "").trim() || null
+  const downloadPassword = ((formData.get("downloadPassword") as string) || "").trim() || null
 
   if (!name) redirect(`/dashboard/admin/produtos/${id}/editar?error=nome`)
 
@@ -314,13 +358,24 @@ export async function updateProduct(id: string, formData: FormData) {
       description,
       features,
       price: Math.round(priceReais * 100),
+      calSlug,
+      downloadUrl,
+      downloadPassword,
       ...(creatorIdRaw ? { creatorId: creatorIdRaw } : {}),
     },
   })
 
-  revalidatePath("/planos")
+  revalidatePath("/")
   revalidatePath("/dashboard/admin")
   redirect("/dashboard/admin?tab=produtos")
+}
+
+export async function deleteProduct(id: string) {
+  const { error } = await requireAdmin()
+  if (error) return
+  await prisma.product.delete({ where: { id } })
+  revalidatePath("/")
+  revalidatePath("/dashboard/admin")
 }
 
 // ─── Creator ──────────────────────────────────────────────────────────────────
