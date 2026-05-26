@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { UserRole } from "@prisma/client"
 import { createProduct } from "@/lib/admin-actions"
+import SlugInput from "./SlugInput"
 
 const inputCls =
   "w-full rounded-lg border border-white/10 bg-[#0d0d0d] px-3 py-2.5 text-sm text-white placeholder:text-white/30 outline-none focus:border-white/30 transition-colors"
@@ -57,24 +58,7 @@ export default async function NovoProdutoPage({ searchParams }: PageProps) {
       )}
 
       <form action={createProduct} className="flex flex-col gap-5">
-        <div>
-          <label className={labelCls} htmlFor="name">Nome *</label>
-          <input
-            id="name"
-            name="name"
-            type="text"
-            required
-            placeholder="Coaching 1:1"
-            className={inputCls}
-            onInput="document.getElementById('slug').value = this.value.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'')"
-          />
-        </div>
-
-        <div>
-          <label className={labelCls} htmlFor="slug">Slug *</label>
-          <input id="slug" name="slug" type="text" required placeholder="coaching-1x1" className={inputCls} />
-          <p className="mt-1 text-xs text-white/30">Identificador único usado internamente (ex: guia-shaco-ad)</p>
-        </div>
+        <SlugInput />
 
         <div>
           <label className={labelCls} htmlFor="description">Descrição</label>
