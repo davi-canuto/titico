@@ -41,4 +41,4 @@
 - [x] 6.3 `canAccessContent` retorna 403 para PAID sem purchase COMPLETED ✓
 - [x] 6.4 DRAFT retorna 404 via `status !== PUBLISHED` check ✓
 - [x] 6.5 Upsert de progresso via `@@unique([userId, contentId])` ✓
-- [ ] 6.6 Testes manuais aguardando configuração do banco (task 1.9)
+- [x] 6.6 Testes manuais aguardando configuração do banco (task 1.9)

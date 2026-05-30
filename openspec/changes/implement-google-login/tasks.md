@@ -20,7 +20,7 @@
 
 ## 5. Verificação Manual do Fluxo
 
-- [ ] 5.1 Testar: acesso a `/dashboard` sem sessão → redireciona para `/login`
-- [ ] 5.2 Testar: clicar "Entrar com Google" → OAuth flow → retorna para `/dashboard`
-- [ ] 5.3 Testar: acessar `/login` com sessão ativa → redireciona para `/dashboard`
-- [ ] 5.4 Testar: `POST /api/auth/signout` → invalida sessão e redireciona para `/`
+- [x] 5.1 Testar: acesso a `/dashboard` sem sessão → redireciona para `/login`
+- [x] 5.2 Testar: clicar "Entrar com Google" → OAuth flow → retorna para `/dashboard`
+- [x] 5.3 Testar: acessar `/login` com sessão ativa → redireciona para `/dashboard`
+- [x] 5.4 Testar: `POST /api/auth/signout` → invalida sessão e redireciona para `/`

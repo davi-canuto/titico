@@ -65,10 +65,10 @@
 ## 11. Validação
 
 - [x] 11.1 Rodar `npx tsc --noEmit` — sem erros de TypeScript
-- [ ] 11.2 Acessar `/` sem sessão → landing renderiza, header mostra botão "Entrar" linkando para `/login`
-- [ ] 11.3 Acessar `/` com sessão ativa → header mostra "Ir para a plataforma" linkando para `/dashboard`
-- [ ] 11.4 Clicar em matchup livre (ex: Viego) → painel aparece com estratégia/dicas/detalhes; clicar novamente fecha
-- [ ] 11.5 Clicar em matchup locked → modal Shaco box aparece com animação; clicar na caixinha → scroll para `#pricing`, modal fecha
-- [ ] 11.6 CTA de plano sem sessão → browser navega para `/login?callbackUrl=/`
-- [ ] 11.7 `/planos` continua renderizando normalmente com `callbackUrl=/planos`
-- [ ] 11.8 Verificar responsividade: hero, grid de matchups e pricing grid em mobile (< 768px) e desktop (≥ 1024px)
+- [x] 11.2 Acessar `/` sem sessão → landing renderiza, header mostra botão "Entrar" linkando para `/login`
+- [x] 11.3 Acessar `/` com sessão ativa → header mostra "Entrar no Lobby" linkando para `/dashboard`
+- [x] 11.4 Clicar em matchup livre (ex: Viego) → painel aparece com estratégia/dicas/detalhes; clicar novamente fecha
+- [x] 11.5 Clicar em matchup locked → modal Shaco box aparece com animação; clicar na caixinha → scroll para `#pricing`, modal fecha
+- [x] 11.6 CTA de plano sem sessão → browser navega para `/login?callbackUrl=/`
+- [x] 11.7 `/planos` continua renderizando normalmente com `callbackUrl=/planos`
+- [x] 11.8 Verificar responsividade: hero, grid de matchups e pricing grid em mobile (< 768px) e desktop (≥ 1024px)

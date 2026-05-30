@@ -24,10 +24,10 @@
 
 ## 4. Testes Manuais
 
-- [ ] 4.1 Cadastrar usuário novo → verificar redirecionamento para `/dashboard` e sessão ativa
-- [ ] 4.2 Tentar cadastrar com email já existente → verificar mensagem de erro 409
-- [ ] 4.3 Tentar cadastrar com senha curta (< 8 chars) → verificar bloqueio client-side e server-side
-- [ ] 4.4 Tentar cadastrar com senhas diferentes → verificar bloqueio client-side
-- [ ] 4.5 Após cadastro, verificar que login com as mesmas credenciais funciona normalmente em `/login`
-- [ ] 4.6 Verificar email de boas-vindas recebido (checar logs do Resend se `RESEND_API_KEY` configurado)
-- [ ] 4.7 Verificar que usuário autenticado redirecionado de `/register` para `/dashboard`
+- [x] 4.1 Cadastrar usuário novo → verificar redirecionamento para `/dashboard` e sessão ativa
+- [x] 4.2 Tentar cadastrar com email já existente → verificar mensagem de erro 409
+- [x] 4.3 Tentar cadastrar com senha curta (< 8 chars) → verificar bloqueio client-side e server-side
+- [x] 4.4 Tentar cadastrar com senhas diferentes → verificar bloqueio client-side
+- [x] 4.5 Após cadastro, verificar que login com as mesmas credenciais funciona normalmente em `/login`
+- [x] 4.6 Verificar email de boas-vindas recebido (checar logs do Resend se `RESEND_API_KEY` configurado)
+- [x] 4.7 Verificar que usuário autenticado redirecionado de `/register` para `/dashboard`

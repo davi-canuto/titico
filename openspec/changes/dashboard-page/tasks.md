@@ -9,7 +9,7 @@
 
 ## 2. Verificação Manual do Fluxo
 
-- [ ] 2.1 Testar: `/login` sem sessão → exibe a tela de login com botão Google
-- [ ] 2.2 Testar: clicar "Entrar com Google" → OAuth flow → redireciona para `/dashboard` com nome e foto
-- [ ] 2.3 Testar: acesso direto a `/dashboard` sem sessão → redireciona para `/login`
-- [ ] 2.4 Testar: clicar "Sair" no dashboard → sessão encerrada, redireciona para `/`
+- [x] 2.1 Testar: `/login` sem sessão → exibe a tela de login com botão Google
+- [x] 2.2 Testar: clicar "Entrar com Google" → OAuth flow → redireciona para `/dashboard` com nome e foto
+- [x] 2.3 Testar: acesso direto a `/dashboard` sem sessão → redireciona para `/login`
+- [x] 2.4 Testar: clicar "Sair" no dashboard → sessão encerrada, redireciona para `/`

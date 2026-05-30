@@ -1,15 +1,15 @@
 ## 1. Pré-requisito Operacional — Cal.com
 
-- [ ] 1.1 Criar conta no Cal.com em cal.com/signup (ou usar conta existente do Titiltei)
-- [ ] 1.2 Criar event type "Coaching 1:1" — duração 60min, slug `coaching-1x1`, descrição e foto
-- [ ] 1.3 Criar event type "Análise de Partida" — duração 30min, slug `analise-de-partida`, adicionar campo customizado obrigatório "ID ou link da partida"
-- [ ] 1.4 Conectar Google Calendar (ou outro) no Cal.com para sincronizar disponibilidade
-- [ ] 1.5 Anotar o username do Cal.com (ex: `titiltei`) para montar os slugs completos
+- [x] 1.1 Criar conta no Cal.com em cal.com/signup (ou usar conta existente do Titiltei)
+- [x] 1.2 Criar event type "Coaching 1:1" — duração 60min, slug `coaching-1x1`, descrição e foto
+- [x] 1.3 Criar event type "Análise de Partida" — duração 30min, slug `analise-de-partida`, adicionar campo customizado obrigatório "ID ou link da partida"
+- [x] 1.4 Conectar Google Calendar (ou outro) no Cal.com para sincronizar disponibilidade
+- [x] 1.5 Anotar o username do Cal.com (ex: `titiltei`) para montar os slugs completos
 
 ## 2. Configuração de Ambiente
 
-- [ ] 2.1 Adicionar `NEXT_PUBLIC_CAL_COACHING_SLUG=titiltei/coaching-1x1` no `.env.local` e no ambiente de produção
-- [ ] 2.2 Adicionar `NEXT_PUBLIC_CAL_ANALISE_SLUG=titiltei/analise-de-partida` no `.env.local` e no ambiente de produção
+- [x] 2.1 Adicionar `NEXT_PUBLIC_CAL_COACHING_SLUG=titiltei/coaching-1x1` no `.env.local` e no ambiente de produção
+- [x] 2.2 Adicionar `NEXT_PUBLIC_CAL_ANALISE_SLUG=titiltei/analise-de-partida` no `.env.local` e no ambiente de produção
 
 ## 3. Dependência
 
@@ -27,9 +27,9 @@
 
 ## 5. Testes Manuais
 
-- [ ] 5.1 Clicar em "Agendar" no card Coaching → modal Cal.com abre com calendário de coaching
-- [ ] 5.2 Clicar em "Agendar" no card Análise → modal Cal.com abre com campo de partida
-- [ ] 5.3 Clicar em "Comprar" no card PDF → navega para `/planos` normalmente
-- [ ] 5.4 Completar um agendamento de teste no Coaching → confirmar email recebido
-- [ ] 5.5 Verificar que o modal fecha corretamente ao clicar fora ou no X
-- [ ] 5.6 Testar em mobile — modal deve ser responsivo
+- [x] 5.1 Clicar em "Agendar" no card Coaching → modal Cal.com abre com calendário de coaching
+- [x] 5.2 Clicar em "Agendar" no card Análise → modal Cal.com abre com campo de partida
+- [x] 5.3 Clicar em "Comprar" no card PDF → navega para `/planos` normalmente
+- [x] 5.4 Completar um agendamento de teste no Coaching → confirmar email recebido
+- [x] 5.5 Verificar que o modal fecha corretamente ao clicar fora ou no X
+- [x] 5.6 Testar em mobile — modal deve ser responsivo

@@ -36,4 +36,4 @@
 ## 6. Validação
 
 - [x] 6.1 Rodar `next build` sem erros de TypeScript
-- [ ] 6.2 Testar localmente com `stripe listen --forward-to localhost:3000/api/stripe/webhook` e confirmar que Purchase é criado ao completar checkout de teste
+- [x] 6.2 Testar localmente com `stripe listen --forward-to localhost:3000/api/stripe/webhook` e confirmar que Purchase é criado ao completar checkout de teste

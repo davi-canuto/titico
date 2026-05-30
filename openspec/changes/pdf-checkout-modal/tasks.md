@@ -1,8 +1,8 @@
 ## 1. Configuração
 
-- [ ] 1.1 Criar (ou identificar) o produto "PDF Guia Shaco AD" na tabela `Product` do banco com `active: true`
-- [ ] 1.2 Adicionar `NEXT_PUBLIC_PDF_PRODUCT_ID=<id-do-produto>` no `.env.local` e no ambiente de produção
-- [ ] 1.3 Habilitar PIX no Stripe Dashboard (Settings → Payment methods → PIX) se ainda não estiver ativo
+- [x] 1.1 Criar (ou identificar) o produto "PDF Guia Shaco AD" na tabela `Product` do banco com `active: true`
+- [x] 1.2 Adicionar `NEXT_PUBLIC_PDF_PRODUCT_ID=<id-do-produto>` no `.env.local` e no ambiente de produção
+- [x] 1.3 Habilitar PIX no Stripe Dashboard (Settings → Payment methods → PIX) se ainda não estiver ativo
 
 ## 2. Endpoint de Checkout
 
@@ -33,11 +33,11 @@
 
 ## 5. Testes Manuais
 
-- [ ] 5.1 Clicar "Comprar" sem estar logado → redireciona para `/login`
-- [ ] 5.2 Clicar "Comprar" logado → modal abre com Cartão e PIX
-- [ ] 5.3 Escolher Cartão → loading aparece → redireciona para Stripe Checkout com método cartão
-- [ ] 5.4 Escolher PIX → loading aparece → redireciona para Stripe Checkout com QR code PIX
-- [ ] 5.5 Fechar modal pelo X e pelo overlay → modal fecha sem iniciar checkout
-- [ ] 5.6 Pressionar Escape → modal fecha
-- [ ] 5.7 Simular erro (produto ID errado) → mensagem de erro aparece no modal
-- [ ] 5.8 Verificar que os botões de Agendar Coaching e Análise continuam funcionando normalmente
+- [x] 5.1 Clicar "Comprar" sem estar logado → modal abre com campo de email (guest checkout)
+- [x] 5.2 Clicar "Comprar" logado → modal abre com Cartão e PIX
+- [x] 5.3 Escolher Cartão → loading aparece → redireciona para Stripe Checkout com método cartão
+- [x] 5.4 Escolher PIX → loading aparece → redireciona para Stripe Checkout com QR code PIX
+- [x] 5.5 Fechar modal pelo X e pelo overlay → modal fecha sem iniciar checkout
+- [x] 5.6 Pressionar Escape → modal fecha
+- [x] 5.7 Simular erro (produto ID errado) → mensagem de erro aparece no modal
+- [x] 5.8 Verificar que os botões de Agendar Coaching e Análise continuam funcionando normalmente

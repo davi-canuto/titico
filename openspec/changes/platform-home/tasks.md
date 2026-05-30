@@ -40,4 +40,4 @@
 - [x] 6.1 Rodar `npm run dev` e acessar `/dashboard` — confirmar que navbar aparece e home renderiza sem erros
 - [x] 6.2 Confirmar que redireciona para `/login` sem sessão
 - [x] 6.3 Confirmar que `npx tsc --noEmit` passa sem erros
-- [ ] 6.4 Verificar layout no browser em desktop (≥1024px) e mobile (<768px)
+- [x] 6.4 Verificar layout no browser em desktop (≥1024px) e mobile (<768px)

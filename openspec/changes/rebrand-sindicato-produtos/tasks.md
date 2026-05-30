@@ -26,6 +26,6 @@
 
 ## 6. Validação
 
-- [ ] 6.1 Rodar `grep -r "Shaco AD" src/` para confirmar que não sobrou nenhuma ocorrência
-- [ ] 6.2 Rodar `next build` sem erros de TypeScript
-- [ ] 6.3 Rodar `npx prisma db seed` em dev e verificar que os 5 produtos foram criados corretamente
+- [x] 6.1 Rodar `grep -r "Shaco AD" src/` para confirmar que não sobrou nenhuma ocorrência
+- [x] 6.2 Rodar `next build` sem erros de TypeScript
+- [x] 6.3 Rodar `npx prisma db seed` em dev e verificar que os 5 produtos foram criados corretamente
