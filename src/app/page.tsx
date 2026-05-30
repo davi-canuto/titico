@@ -7,12 +7,13 @@ import VideoSection from '@/components/landing/VideoSection'
 import MatchupGrid from '@/components/landing/MatchupGrid'
 import About from '@/components/landing/About'
 import PricingSection from '@/components/landing/PricingSection'
+import ContentSamplesSection from '@/components/landing/ContentSamplesSection'
 import LandingFooter from '@/components/landing/LandingFooter'
 
 const PDF_PRODUCT_SLUG = 'guia-shaco-ad'
 
 export default async function RootPage() {
-  const [session, products, pdfProduct] = await Promise.all([
+  const [session, products, pdfProduct, samples] = await Promise.all([
     auth(),
     prisma.product.findMany({
       where: { active: true },
@@ -21,6 +22,18 @@ export default async function RootPage() {
     prisma.product.findUnique({
       where: { slug: PDF_PRODUCT_SLUG, active: true },
       select: { id: true },
+    }),
+    prisma.content.findMany({
+      where: { status: 'PUBLISHED', active: true },
+      orderBy: { publishedAt: 'desc' },
+      take: 4,
+      select: {
+        id: true,
+        title: true,
+        type: true,
+        thumbnail: true,
+        matchup: { select: { difficulty: true } },
+      },
     }),
   ])
 
@@ -36,6 +49,7 @@ export default async function RootPage() {
         <MatchupGrid />
         <About />
         <PricingSection />
+        <ContentSamplesSection samples={samples} />
       </main>
       <LandingFooter />
     </div>
