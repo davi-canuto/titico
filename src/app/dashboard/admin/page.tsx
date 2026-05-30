@@ -13,6 +13,7 @@ import {
   deleteProduct,
   createCreator,
   toggleCreatorActive,
+  updateCreatorPixKey,
 } from "@/lib/admin-actions"
 import ConfirmButton from "@/components/admin/ConfirmButton"
 
@@ -667,6 +668,10 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                 <label className="mb-1.5 block text-xs font-semibold uppercase tracking-widest text-white/50">Descrição</label>
                 <input name="description" placeholder="Rank 1 Shaco BR..." className="w-full rounded-lg border border-white/10 bg-[#0d0d0d] px-3 py-2.5 text-sm text-white placeholder:text-white/30 outline-none focus:border-white/30" />
               </div>
+              <div className="sm:col-span-2">
+                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-widest text-white/50">Chave Pix <span className="normal-case font-normal text-white/30">(para split 80%)</span></label>
+                <input name="pixKey" placeholder="CPF, CNPJ, e-mail, telefone ou chave aleatória" className="w-full rounded-lg border border-white/10 bg-[#0d0d0d] px-3 py-2.5 text-sm text-white placeholder:text-white/30 outline-none focus:border-white/30" />
+              </div>
               <div className="sm:col-span-2 flex justify-end">
                 <button type="submit" className="rounded-lg bg-[#e3001b] px-5 py-2.5 text-xs font-black uppercase tracking-wider text-white transition-colors hover:bg-[#b50015]">
                   Criar criador
@@ -688,6 +693,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                     <th className={thCls}>Nome</th>
                     <th className={thCls}>Slug</th>
                     <th className={thCls}>Campeão</th>
+                    <th className={thCls}>Chave Pix</th>
                     <th className={thCls}>Produtos</th>
                     <th className={thCls}>Conteúdos</th>
                     <th className={thCls}>Status</th>
@@ -700,6 +706,17 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                       <td className={cellCls}><span className="font-semibold text-white">{c.name}</span></td>
                       <td className={cellCls}>{c.slug}</td>
                       <td className={cellCls}>{c.champion}</td>
+                      <td className={cellCls}>
+                        <form action={updateCreatorPixKey.bind(null, c.id)} className="flex items-center gap-2">
+                          <input
+                            name="pixKey"
+                            defaultValue={c.pixKey ?? ""}
+                            placeholder="chave pix"
+                            className="w-40 rounded border border-white/10 bg-[#0d0d0d] px-2 py-1 text-xs text-white placeholder:text-white/20 outline-none focus:border-white/30"
+                          />
+                          <button type="submit" className="text-xs text-[#4ade80] hover:underline">Salvar</button>
+                        </form>
+                      </td>
                       <td className={cellCls}>{c._count.products}</td>
                       <td className={cellCls}>{c._count.contents}</td>
                       <td className={cellCls}>

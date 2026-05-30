@@ -26,7 +26,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "EMAIL_REQUIRED" }, { status: 400 })
     }
 
-    const product = await prisma.product.findFirst({ where: { id: productId, active: true } })
+    const product = await prisma.product.findFirst({
+      where: { id: productId, active: true },
+      include: { creator: { select: { pixKey: true } } },
+    })
     if (!product) {
       return NextResponse.json({ error: "PRODUCT_NOT_FOUND" }, { status: 400 })
     }
@@ -51,11 +54,17 @@ export async function POST(req: NextRequest) {
       },
     })
 
+    const splits =
+      product.creator.pixKey
+        ? [{ pixAlias: { key: product.creator.pixKey }, value: Math.floor(product.price * 0.8) }]
+        : undefined
+
     try {
       const charge = await createCharge({
         correlationID,
         value: product.price,
         comment: product.name,
+        splits,
       })
       return NextResponse.json(charge, { status: 201 })
     } catch (err) {

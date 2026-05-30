@@ -66,6 +66,7 @@ model Creator {
   description String?
   avatarUrl   String?
   bannerUrl   String?
+  pixKey      String?
   active      Boolean   @default(true)
   createdAt   DateTime  @default(now())
   contents    Content[]

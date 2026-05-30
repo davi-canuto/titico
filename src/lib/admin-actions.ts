@@ -402,9 +402,10 @@ export async function createCreator(formData: FormData) {
   const descriptionRaw = (formData.get("description") as string).trim()
   const avatarUrl = ((formData.get("avatarUrl") as string) || "").trim() || null
   const bannerUrl = ((formData.get("bannerUrl") as string) || "").trim() || null
+  const pixKey = ((formData.get("pixKey") as string) || "").trim() || null
 
   await prisma.creator.create({
-    data: { slug, name, champion, description: descriptionRaw || null, avatarUrl, bannerUrl, active: true },
+    data: { slug, name, champion, description: descriptionRaw || null, avatarUrl, bannerUrl, pixKey, active: true },
   })
 
   revalidatePath("/dashboard/admin")
@@ -417,6 +418,14 @@ export async function toggleCreatorActive(creatorId: string) {
   const creator = await prisma.creator.findUnique({ where: { id: creatorId } })
   if (!creator) return
   await prisma.creator.update({ where: { id: creatorId }, data: { active: !creator.active } })
+  revalidatePath("/dashboard/admin")
+}
+
+export async function updateCreatorPixKey(creatorId: string, formData: FormData) {
+  const { error } = await requireAdmin()
+  if (error) return
+  const pixKey = ((formData.get("pixKey") as string) || "").trim() || null
+  await prisma.creator.update({ where: { id: creatorId }, data: { pixKey } })
   revalidatePath("/dashboard/admin")
 }
 

@@ -8,6 +8,11 @@ export interface WooviCharge {
   brCode: string
 }
 
+export interface WooviSplit {
+  pixAlias: { key: string }
+  value: number
+}
+
 function appId(): string {
   const id = process.env.WOOVI_APP_ID
   if (!id) throw new Error("WOOVI_APP_ID is not set")
@@ -18,11 +23,20 @@ export async function createCharge(params: {
   correlationID: string
   value: number
   comment: string
+  splits?: WooviSplit[]
 }): Promise<WooviCharge> {
+  const body: Record<string, unknown> = {
+    correlationID: params.correlationID,
+    value: params.value,
+    comment: params.comment,
+  }
+  if (params.splits && params.splits.length > 0) {
+    body.splits = params.splits
+  }
   const res = await fetch(`${WOOVI_BASE}/charge`, {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: appId() },
-    body: JSON.stringify(params),
+    body: JSON.stringify(body),
   })
   if (!res.ok) {
     const text = await res.text()
