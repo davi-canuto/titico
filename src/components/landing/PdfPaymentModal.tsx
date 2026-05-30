@@ -194,7 +194,7 @@ export default function PdfPaymentModal({ open, onClose, productId, isAuthentica
           </svg>
         </button>
 
-        <p className="text-[#e3001b] text-xs uppercase tracking-[0.3em] font-semibold mb-1">PDF Guia Shaco AD</p>
+        <p className="text-[#e3001b] text-xs uppercase tracking-[0.3em] font-semibold mb-1">PDF Guia do Shaco</p>
 
         {view === 'buttons' && (
           <>

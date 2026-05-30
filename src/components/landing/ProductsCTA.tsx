@@ -104,7 +104,7 @@ export default function ProductsCTA({ isAuthenticated, productsBySlug, pdfProduc
               <PdfIcon />
             </div>
             <div className="flex-1">
-              <p className="text-xs uppercase tracking-[0.2em] font-semibold text-white/40 mb-1">PDF Guia Shaco AD</p>
+              <p className="text-xs uppercase tracking-[0.2em] font-semibold text-white/40 mb-1">PDF Guia do Shaco</p>
               <p className="text-white/70 text-sm leading-relaxed">Material completo em PDF para estudar no seu ritmo.</p>
             </div>
             <button
