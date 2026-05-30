@@ -142,7 +142,7 @@ export default async function CheckoutSucessoPage({ searchParams }: Props) {
             </div>
 
             <Link
-              href="/dashboard"
+              href="/lobby"
               className="inline-flex items-center gap-2 rounded-lg bg-[#e3001b] px-8 py-3 text-sm font-black uppercase tracking-wider text-white transition-colors hover:bg-[#b50015] active:bg-[#900010]"
             >
               Entrar no Lobby

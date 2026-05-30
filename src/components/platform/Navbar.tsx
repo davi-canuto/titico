@@ -14,9 +14,9 @@ interface NavbarProps {
 }
 
 const navLinks = [
-  { href: "/dashboard", label: "Início" },
-  { href: "/dashboard/explorar", label: "Explorar" },
-  { href: "/dashboard/comunidade", label: "Comunidade" },
+  { href: "/lobby", label: "Início" },
+  { href: "/lobby/explorar", label: "Explorar" },
+  { href: "/lobby/comunidade", label: "Comunidade" },
 ]
 
 export default function Navbar({ userName, userImage, userRole }: NavbarProps) {
@@ -39,7 +39,7 @@ export default function Navbar({ userName, userImage, userRole }: NavbarProps) {
     <nav className="sticky top-0 z-50 flex h-14 items-center justify-between gap-4 border-b border-white/5 bg-[#0d0d0d]/95 px-4 backdrop-blur-sm md:px-8">
 
       {/* Logo */}
-      <Link href="/dashboard" className="shrink-0 text-lg font-black uppercase tracking-tight text-white">
+      <Link href="/lobby" className="shrink-0 text-lg font-black uppercase tracking-tight text-white">
         Titiltei
       </Link>
 
@@ -67,7 +67,7 @@ export default function Navbar({ userName, userImage, userRole }: NavbarProps) {
       <div className="flex items-center gap-3">
 
         {/* Search link */}
-        <Link href="/dashboard/buscar" className="hidden items-center gap-2 rounded-full border border-white/10 bg-[#161616] px-3 py-1.5 transition-colors hover:border-white/20 md:flex">
+        <Link href="/lobby/buscar" className="hidden items-center gap-2 rounded-full border border-white/10 bg-[#161616] px-3 py-1.5 transition-colors hover:border-white/20 md:flex">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-white/40">
             <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
           </svg>
@@ -77,7 +77,7 @@ export default function Navbar({ userName, userImage, userRole }: NavbarProps) {
         {/* Admin badge */}
         {userRole === UserRole.ADMIN && (
           <Link
-            href="/dashboard/admin"
+            href="/admin"
             className="hidden items-center gap-1.5 rounded-full bg-[#e3001b] px-2.5 py-0.5 text-[10px] font-black uppercase tracking-widest text-white transition-colors hover:bg-[#b50015] md:flex"
           >
             <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
@@ -140,7 +140,7 @@ export default function Navbar({ userName, userImage, userRole }: NavbarProps) {
               {/* Menu items */}
               <div className="py-1">
                 <Link
-                  href="/dashboard/perfil"
+                  href="/lobby/perfil"
                   onClick={() => setMenuOpen(false)}
                   className="flex items-center gap-3 px-4 py-2.5 text-sm text-white/70 hover:bg-white/5 hover:text-white transition-colors"
                 >
@@ -163,7 +163,7 @@ export default function Navbar({ userName, userImage, userRole }: NavbarProps) {
 
                 {userRole === UserRole.ADMIN && (
                   <Link
-                    href="/dashboard/admin"
+                    href="/admin"
                     onClick={() => setMenuOpen(false)}
                     className="flex items-center gap-3 px-4 py-2.5 text-sm text-white/70 hover:bg-white/5 hover:text-white transition-colors"
                   >

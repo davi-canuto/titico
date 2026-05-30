@@ -16,8 +16,8 @@ export async function publishContent(id: string) {
     data: { status: ContentStatus.PUBLISHED, publishedAt: new Date() },
     select: { slug: true },
   })
-  revalidatePath("/dashboard/admin")
-  revalidatePath("/dashboard/conteudo/" + content.slug)
+  revalidatePath("/admin")
+  revalidatePath("/lobby/conteudo/" + content.slug)
 }
 
 export async function unpublishContent(id: string) {
@@ -28,15 +28,15 @@ export async function unpublishContent(id: string) {
     data: { status: ContentStatus.DRAFT, publishedAt: null },
     select: { slug: true },
   })
-  revalidatePath("/dashboard/admin")
-  revalidatePath("/dashboard/conteudo/" + content.slug)
+  revalidatePath("/admin")
+  revalidatePath("/lobby/conteudo/" + content.slug)
 }
 
 export async function deleteContent(id: string) {
   const { error } = await requireAdmin()
   if (error) return
   await prisma.content.delete({ where: { id } })
-  revalidatePath("/dashboard/admin")
+  revalidatePath("/admin")
 }
 
 export async function createContent(formData: FormData) {
@@ -53,7 +53,7 @@ export async function createContent(formData: FormData) {
 
   const existing = await prisma.content.findUnique({ where: { slug } })
   if (existing) {
-    redirect(`/dashboard/admin/conteudos/novo?tipo=${tipo}&error=slug`)
+    redirect(`/admin/conteudos/novo?tipo=${tipo}&error=slug`)
   }
 
   const metaCreate: Record<string, unknown> = {}
@@ -125,7 +125,7 @@ export async function createContent(formData: FormData) {
     })
   }
 
-  redirect("/dashboard/admin")
+  redirect("/admin")
 }
 
 // ─── Trail ────────────────────────────────────────────────────────────────────
@@ -134,14 +134,14 @@ export async function toggleTrail(id: string, active: boolean) {
   const { error } = await requireAdmin()
   if (error) return
   await prisma.trail.update({ where: { id }, data: { active } })
-  revalidatePath("/dashboard/admin")
+  revalidatePath("/admin")
 }
 
 export async function deleteTrail(id: string) {
   const { error } = await requireAdmin()
   if (error) return
   await prisma.trail.delete({ where: { id } })
-  revalidatePath("/dashboard/admin")
+  revalidatePath("/admin")
 }
 
 export async function createTrail(formData: FormData) {
@@ -155,7 +155,7 @@ export async function createTrail(formData: FormData) {
 
   const existing = await prisma.trail.findUnique({ where: { slug } })
   if (existing) {
-    redirect("/dashboard/admin/trilhas/novo?error=slug")
+    redirect("/admin/trilhas/novo?error=slug")
   }
 
   await prisma.trail.create({
@@ -168,7 +168,7 @@ export async function createTrail(formData: FormData) {
     },
   })
 
-  redirect("/dashboard/admin?tab=trilhas")
+  redirect("/admin?tab=trilhas")
 }
 
 export async function updateContent(id: string, formData: FormData) {
@@ -184,7 +184,7 @@ export async function updateContent(id: string, formData: FormData) {
 
   const existing = await prisma.content.findFirst({ where: { slug, id: { not: id } } })
   if (existing) {
-    redirect(`/dashboard/admin/conteudos/${id}/editar?error=slug`)
+    redirect(`/admin/conteudos/${id}/editar?error=slug`)
   }
 
   const content = await prisma.content.update({
@@ -192,7 +192,7 @@ export async function updateContent(id: string, formData: FormData) {
     data: { title, slug, thumbnail, creatorId },
   })
 
-  revalidatePath("/dashboard/conteudo/" + content.slug)
+  revalidatePath("/lobby/conteudo/" + content.slug)
 
   switch (content.type) {
     case ContentType.VIDEO:
@@ -252,7 +252,7 @@ export async function updateContent(id: string, formData: FormData) {
     })
   }
 
-  redirect("/dashboard/admin")
+  redirect("/admin")
 }
 
 export async function updateTrail(id: string, formData: FormData) {
@@ -266,7 +266,7 @@ export async function updateTrail(id: string, formData: FormData) {
 
   const existing = await prisma.trail.findFirst({ where: { slug, id: { not: id } } })
   if (existing) {
-    redirect(`/dashboard/admin/trilhas/${id}/editar?error=slug`)
+    redirect(`/admin/trilhas/${id}/editar?error=slug`)
   }
 
   await prisma.trail.update({
@@ -274,7 +274,7 @@ export async function updateTrail(id: string, formData: FormData) {
     data: { title, slug, description: descriptionRaw || null, thumbnail: thumbnailRaw || null },
   })
 
-  redirect("/dashboard/admin?tab=trilhas")
+  redirect("/admin?tab=trilhas")
 }
 
 // ─── Product ──────────────────────────────────────────────────────────────────
@@ -284,7 +284,7 @@ export async function toggleProduct(id: string, active: boolean) {
   if (error) return
   await prisma.product.update({ where: { id }, data: { active } })
   revalidatePath("/planos")
-  revalidatePath("/dashboard/admin")
+  revalidatePath("/admin")
 }
 
 export async function createProduct(formData: FormData) {
@@ -304,15 +304,15 @@ export async function createProduct(formData: FormData) {
   const downloadUrl = ((formData.get("downloadUrl") as string) || "").trim() || null
   const downloadPassword = ((formData.get("downloadPassword") as string) || "").trim() || null
 
-  if (!name) redirect("/dashboard/admin/produtos/novo?error=nome")
-  if (!slug) redirect("/dashboard/admin/produtos/novo?error=slug")
+  if (!name) redirect("/admin/produtos/novo?error=nome")
+  if (!slug) redirect("/admin/produtos/novo?error=slug")
 
   const priceReais = parseFloat(priceRaw)
-  if (isNaN(priceReais) || priceReais <= 0) redirect("/dashboard/admin/produtos/novo?error=preco")
-  if (!creatorId) redirect("/dashboard/admin/produtos/novo?error=criador")
+  if (isNaN(priceReais) || priceReais <= 0) redirect("/admin/produtos/novo?error=preco")
+  if (!creatorId) redirect("/admin/produtos/novo?error=criador")
 
   const existing = await prisma.product.findUnique({ where: { slug } })
-  if (existing) redirect("/dashboard/admin/produtos/novo?error=slug")
+  if (existing) redirect("/admin/produtos/novo?error=slug")
 
   await prisma.product.create({
     data: {
@@ -330,8 +330,8 @@ export async function createProduct(formData: FormData) {
   })
 
   revalidatePath("/")
-  revalidatePath("/dashboard/admin")
-  redirect("/dashboard/admin?tab=produtos")
+  revalidatePath("/admin")
+  redirect("/admin?tab=produtos")
 }
 
 export async function updateProduct(id: string, formData: FormData) {
@@ -351,16 +351,16 @@ export async function updateProduct(id: string, formData: FormData) {
   const downloadUrl = ((formData.get("downloadUrl") as string) || "").trim() || null
   const downloadPassword = ((formData.get("downloadPassword") as string) || "").trim() || null
 
-  if (!name) redirect(`/dashboard/admin/produtos/${id}/editar?error=nome`)
-  if (!slug) redirect(`/dashboard/admin/produtos/${id}/editar?error=slug`)
+  if (!name) redirect(`/admin/produtos/${id}/editar?error=nome`)
+  if (!slug) redirect(`/admin/produtos/${id}/editar?error=slug`)
 
   const priceReais = parseFloat(priceRaw)
   if (isNaN(priceReais) || priceReais <= 0) {
-    redirect(`/dashboard/admin/produtos/${id}/editar?error=preco`)
+    redirect(`/admin/produtos/${id}/editar?error=preco`)
   }
 
   const existing = await prisma.product.findFirst({ where: { slug, id: { not: id } } })
-  if (existing) redirect(`/dashboard/admin/produtos/${id}/editar?error=slug`)
+  if (existing) redirect(`/admin/produtos/${id}/editar?error=slug`)
 
   await prisma.product.update({
     where: { id },
@@ -378,8 +378,8 @@ export async function updateProduct(id: string, formData: FormData) {
   })
 
   revalidatePath("/")
-  revalidatePath("/dashboard/admin")
-  redirect("/dashboard/admin?tab=produtos")
+  revalidatePath("/admin")
+  redirect("/admin?tab=produtos")
 }
 
 export async function deleteProduct(id: string) {
@@ -387,7 +387,7 @@ export async function deleteProduct(id: string) {
   if (error) return
   await prisma.product.delete({ where: { id } })
   revalidatePath("/")
-  revalidatePath("/dashboard/admin")
+  revalidatePath("/admin")
 }
 
 // ─── Creator ──────────────────────────────────────────────────────────────────
@@ -408,8 +408,8 @@ export async function createCreator(formData: FormData) {
     data: { slug, name, champion, description: descriptionRaw || null, avatarUrl, bannerUrl, pixKey, active: true },
   })
 
-  revalidatePath("/dashboard/admin")
-  redirect("/dashboard/admin?tab=criadores")
+  revalidatePath("/admin")
+  redirect("/admin?tab=criadores")
 }
 
 export async function toggleCreatorActive(creatorId: string) {
@@ -418,7 +418,7 @@ export async function toggleCreatorActive(creatorId: string) {
   const creator = await prisma.creator.findUnique({ where: { id: creatorId } })
   if (!creator) return
   await prisma.creator.update({ where: { id: creatorId }, data: { active: !creator.active } })
-  revalidatePath("/dashboard/admin")
+  revalidatePath("/admin")
 }
 
 export async function updateCreatorPixKey(creatorId: string, formData: FormData) {
@@ -426,7 +426,7 @@ export async function updateCreatorPixKey(creatorId: string, formData: FormData)
   if (error) return
   const pixKey = ((formData.get("pixKey") as string) || "").trim() || null
   await prisma.creator.update({ where: { id: creatorId }, data: { pixKey } })
-  revalidatePath("/dashboard/admin")
+  revalidatePath("/admin")
 }
 
 // ─── Trail Items ──────────────────────────────────────────────────────────────
@@ -442,7 +442,7 @@ export async function addTrailItem(trailId: string, formData: FormData) {
   } catch {
     // unique constraint — already added, ignore
   }
-  revalidatePath(`/dashboard/admin/trilhas/${trailId}/itens`)
+  revalidatePath(`/admin/trilhas/${trailId}/itens`)
 }
 
 export async function removeTrailItem(itemId: string, trailId: string) {
@@ -458,7 +458,7 @@ export async function removeTrailItem(itemId: string, trailId: string) {
       prisma.trailItem.update({ where: { id: item.id }, data: { order: i + 1 } })
     )
   )
-  revalidatePath(`/dashboard/admin/trilhas/${trailId}/itens`)
+  revalidatePath(`/admin/trilhas/${trailId}/itens`)
 }
 
 export async function moveTrailItemUp(itemId: string, trailId: string) {
@@ -475,7 +475,7 @@ export async function moveTrailItemUp(itemId: string, trailId: string) {
     prisma.trailItem.update({ where: { id: above.id }, data: { order: item.order } }),
     prisma.trailItem.update({ where: { id: item.id }, data: { order: item.order - 1 } }),
   ])
-  revalidatePath(`/dashboard/admin/trilhas/${trailId}/itens`)
+  revalidatePath(`/admin/trilhas/${trailId}/itens`)
 }
 
 export async function moveTrailItemDown(itemId: string, trailId: string) {
@@ -492,5 +492,5 @@ export async function moveTrailItemDown(itemId: string, trailId: string) {
     prisma.trailItem.update({ where: { id: below.id }, data: { order: item.order } }),
     prisma.trailItem.update({ where: { id: item.id }, data: { order: item.order + 1 } }),
   ])
-  revalidatePath(`/dashboard/admin/trilhas/${trailId}/itens`)
+  revalidatePath(`/admin/trilhas/${trailId}/itens`)
 }

@@ -39,6 +39,6 @@ export async function requestRefund(purchaseId: string): Promise<{ error?: strin
     data: { status: PurchaseStatus.REFUNDED },
   })
 
-  revalidatePath("/dashboard/perfil")
+  revalidatePath("/lobby/perfil")
   return {}
 }

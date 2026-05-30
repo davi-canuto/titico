@@ -68,7 +68,7 @@ export default async function PreviewPage({ params }: Props) {
   if (!data) notFound()
 
   if (data.hasAccess) {
-    redirect(`/dashboard/conteudo/${data.slug}`)
+    redirect(`/lobby/conteudo/${data.slug}`)
   }
 
   return (

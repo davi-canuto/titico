@@ -30,7 +30,7 @@ export function purchaseConfirmationEmail(
             <p style="margin:0 0 32px;font-size:15px;color:rgba(255,255,255,0.7);line-height:1.6;">
               Acesse o dashboard para começar a consumir o conteúdo exclusivo de assinante imediatamente.
             </p>
-            <a href="https://titico.app/dashboard" style="display:inline-block;background-color:#e3001b;color:#ffffff;text-decoration:none;padding:14px 28px;border-radius:8px;font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:0.1em;">
+            <a href="https://titico.app/lobby" style="display:inline-block;background-color:#e3001b;color:#ffffff;text-decoration:none;padding:14px 28px;border-radius:8px;font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:0.1em;">
               Acessar conteúdo exclusivo
             </a>
           </td>
@@ -39,7 +39,7 @@ export function purchaseConfirmationEmail(
         <tr>
           <td style="padding:20px 32px;border-top:1px solid rgba(255,255,255,0.05);">
             <p style="margin:0;font-size:12px;color:rgba(255,255,255,0.25);">
-              Em caso de dúvidas, responda este email ou entre em contato pelo dashboard.
+              Em caso de dúvidas, responda este email ou entre em contato pelo Lobby.
             </p>
           </td>
         </tr>

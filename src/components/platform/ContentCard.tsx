@@ -44,7 +44,7 @@ export default function ContentCard({ content, userProgress, locked, isFree }: C
   const showProgress = watched > 0
 
   return (
-    <Link href={`/dashboard/conteudo/${content.slug}`} className="group flex flex-col gap-2.5">
+    <Link href={`/lobby/conteudo/${content.slug}`} className="group flex flex-col gap-2.5">
 
       {/* Thumbnail */}
       <div className="relative aspect-video overflow-hidden rounded-xl bg-[#161616]">

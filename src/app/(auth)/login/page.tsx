@@ -7,13 +7,13 @@ interface LoginPageProps {
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {
   const session = await auth()
-  if (session) redirect("/dashboard")
+  if (session) redirect("/lobby")
 
   const { error } = await searchParams
 
   async function googleSignIn() {
     "use server"
-    await signIn("google", { redirectTo: "/dashboard" })
+    await signIn("google", { redirectTo: "/lobby" })
   }
 
   async function credentialSignIn(formData: FormData) {
@@ -22,7 +22,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
       await signIn("credentials", {
         email: formData.get("email"),
         password: formData.get("password"),
-        redirectTo: "/dashboard",
+        redirectTo: "/lobby",
       })
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : ""

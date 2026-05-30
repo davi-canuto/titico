@@ -26,8 +26,8 @@ export function welcomeEmail(name: string): { subject: string; html: string } {
             <p style="margin:0 0 32px;font-size:15px;color:rgba(255,255,255,0.7);line-height:1.6;">
               Para acessar o conteúdo completo — módulos, análises e coaching — escolha um dos nossos planos.
             </p>
-            <a href="https://titico.app/dashboard" style="display:inline-block;background-color:#e3001b;color:#ffffff;text-decoration:none;padding:14px 28px;border-radius:8px;font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:0.1em;">
-              Acessar dashboard
+            <a href="https://titico.app/lobby" style="display:inline-block;background-color:#e3001b;color:#ffffff;text-decoration:none;padding:14px 28px;border-radius:8px;font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:0.1em;">
+              Acessar o Lobby
             </a>
           </td>
         </tr>

@@ -3,7 +3,8 @@ import { auth } from "@/lib/auth"
 import { getRateLimiter } from "@/lib/rate-limit"
 
 const AUTH_PROTECTED_PREFIXES = [
-  "/dashboard",
+  "/lobby",
+  "/admin",
   "/api/matchups/",
   "/api/videos/",
   "/api/user/",
@@ -41,7 +42,7 @@ export async function proxy(request: NextRequest): Promise<Response> {
     }
   }
 
-  // Auth protection for dashboard and specific API routes
+  // Auth protection for lobby, admin and specific API routes
   const needsAuth = AUTH_PROTECTED_PREFIXES.some((p) => pathname.startsWith(p))
   if (needsAuth) {
     const authResponse = await (auth as unknown as AuthFn)(request)
@@ -53,7 +54,8 @@ export async function proxy(request: NextRequest): Promise<Response> {
 
 export const config = {
   matcher: [
-    "/dashboard/:path*",
+    "/lobby/:path*",
+    "/admin/:path*",
     "/api/:path*",
   ],
 }

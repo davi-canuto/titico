@@ -8,5 +8,5 @@ export async function updateHeroSkin(skinNum: string): Promise<void> {
   const session = await auth()
   if (!session?.user?.id) throw new Error('UNAUTHORIZED')
   await userService.updateHeroSkin(session.user.id, skinNum)
-  revalidatePath('/dashboard')
+  revalidatePath('/lobby')
 }

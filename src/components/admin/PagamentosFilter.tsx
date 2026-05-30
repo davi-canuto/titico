@@ -20,12 +20,12 @@ export default function PagamentosFilter({ products }: PagamentosFilterProps) {
     const productId = data.get("productId") as string
     if (email) params.set("email", email)
     if (productId) params.set("productId", productId)
-    router.push(`/dashboard/admin/pagamentos?${params.toString()}`)
+    router.push(`/admin/pagamentos?${params.toString()}`)
   }
 
   function handleClear() {
     formRef.current?.reset()
-    router.push("/dashboard/admin/pagamentos")
+    router.push("/admin/pagamentos")
   }
 
   const currentEmail = searchParams.get("email") ?? ""

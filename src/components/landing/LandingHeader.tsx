@@ -40,7 +40,7 @@ export default function LandingHeader({ isAuthenticated }: Props) {
           <SocialLinks />
           {isAuthenticated ? (
             <Link
-              href="/dashboard"
+              href="/lobby"
               className="bg-[#e3001b] hover:bg-[#b50015] active:bg-[#900010] text-white font-black uppercase tracking-wider text-sm px-4 py-2 rounded-lg transition-colors"
             >
               Entrar no Lobby
@@ -78,7 +78,7 @@ export default function LandingHeader({ isAuthenticated }: Props) {
           ))}
           {isAuthenticated ? (
             <Link
-              href="/dashboard"
+              href="/lobby"
               onClick={() => setOpen(false)}
               className="bg-[#e3001b] text-white text-sm font-black uppercase tracking-wider px-4 py-2 rounded-lg text-center"
             >
