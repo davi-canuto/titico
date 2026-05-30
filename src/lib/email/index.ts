@@ -5,6 +5,14 @@ export interface EmailProvider {
 export function getEmailProvider(): EmailProvider {
   const provider = process.env.EMAIL_PROVIDER ?? "resend"
 
+  if (provider === "log") {
+    return {
+      async send({ to, subject }) {
+        console.log(`[email:log] to=${to} subject="${subject}"`)
+      },
+    }
+  }
+
   if (provider === "resend") {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { ResendEmailProvider } = require("./providers/resend") as { ResendEmailProvider: new () => EmailProvider }
