@@ -27,6 +27,7 @@ export const authConfig: NextAuthConfig = {
     authorized({ auth: session, request }) {
       const pathname = request.nextUrl.pathname
       if (pathname.startsWith('/api/')) return true
+      if (pathname.startsWith('/preview')) return true
       return !!session
     },
     jwt({ token, user }) {
