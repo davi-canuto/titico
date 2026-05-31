@@ -25,8 +25,16 @@ export default function BuscarPage() {
   const [type, setType]             = useState<ContentType | null>(null)
   const [difficulty, setDifficulty] = useState<Difficulty | null>(null)
   const [results, setResults]       = useState<SearchResult[] | null>(null)
+  const [recent, setRecent]         = useState<SearchResult[]>([])
   const [loading, setLoading]       = useState(false)
   const abortRef = useRef<AbortController | null>(null)
+
+  useEffect(() => {
+    fetch("/api/search?q=&limit=8")
+      .then((r) => r.json())
+      .then((data: SearchResult[]) => setRecent(data))
+      .catch(() => {})
+  }, [])
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -148,14 +156,18 @@ export default function BuscarPage() {
           </div>
         )}
 
-        {/* Initial state — no query yet */}
-        {results === null && !loading && (
-          <div className="flex flex-col items-center justify-center py-24 text-center">
-            <svg className="mb-4 text-white/10" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
-            </svg>
-            <p className="text-sm text-white/30">Digite para buscar conteúdos</p>
-          </div>
+        {/* Initial state — conteúdos recentes */}
+        {!hasQuery && results === null && recent.length > 0 && (
+          <>
+            <p className="mb-4 text-xs uppercase tracking-[0.25em] font-semibold text-white/40">
+              Conteúdos recentes
+            </p>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {recent.map((content) => (
+                <ContentCard key={content.id} content={content} />
+              ))}
+            </div>
+          </>
         )}
 
       </div>

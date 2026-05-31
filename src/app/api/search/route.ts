@@ -7,6 +7,8 @@ export async function GET(request: Request) {
   const q = searchParams.get("q") ?? ""
   const typeParam = searchParams.get("type")
   const difficultyParam = searchParams.get("difficulty")
+  const limitParam = parseInt(searchParams.get("limit") ?? "50", 10)
+  const limit = isNaN(limitParam) || limitParam < 1 ? 50 : Math.min(limitParam, 50)
 
   const type = Object.values(ContentType).includes(typeParam as ContentType)
     ? (typeParam as ContentType)
@@ -36,7 +38,7 @@ export async function GET(request: Request) {
       video: true,
       matchup: true,
     },
-    take: 50,
+    take: limit,
     orderBy: { publishedAt: "desc" },
   })
 
