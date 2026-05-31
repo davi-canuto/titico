@@ -15,10 +15,11 @@ export default async function DashboardPage() {
 
   const userId = session.user.id
 
-  const [user, continueWatching, trails] = await Promise.all([
+  const [user, continueWatching, trails, overallProgress] = await Promise.all([
     userService.getUserProfile(userId),
     contentService.getContinueWatching(userId),
     trailService.getActiveTrails(),
+    trailService.getUserOverallProgress(userId),
   ])
 
   const { hasAccess } = await userService.getUserAccessStatus(userId)
@@ -29,6 +30,7 @@ export default async function DashboardPage() {
 
   const continueItems = continueWatching.map((p) => ({ id: p.id, content: p.content }))
   const activeTrails = trails.filter((t) => t.items.length > 0)
+  const trailCounts = await trailService.getTrailCompletionCounts(activeTrails, userId)
 
   return (
     <main className="min-h-screen bg-[#0d0d0d]">
@@ -54,9 +56,22 @@ export default async function DashboardPage() {
           <h1 className="mb-3 text-4xl font-black uppercase leading-none tracking-tight text-white md:text-6xl">
             Lobby do<br />Titiltei
           </h1>
-          <p className="mb-6 max-w-sm text-sm text-white/55 leading-relaxed hidden md:block">
+          <p className="mb-4 max-w-sm text-sm text-white/55 leading-relaxed hidden md:block">
             Módulos, matchups, builds e análises para você subir de elo com Shaco.
           </p>
+          {overallProgress.total > 0 && (
+            <div className="mb-5 hidden md:block">
+              <p className="text-xs text-white/40 mb-1.5">
+                {overallProgress.completed} de {overallProgress.total} concluídos
+              </p>
+              <div className="h-1 w-40 rounded-full bg-white/10">
+                <div
+                  className="h-full rounded-full bg-[#e3001b] transition-all"
+                  style={{ width: `${Math.round((overallProgress.completed / overallProgress.total) * 100)}%` }}
+                />
+              </div>
+            </div>
+          )}
           <div className="flex flex-wrap items-center gap-3">
             <Link
               href="/lobby/explorar"
@@ -97,6 +112,7 @@ export default async function DashboardPage() {
             items={trail.items.map((i) => ({ id: i.id, content: i.content }))}
             progressMap={progressMap}
             locked={!hasAccess}
+            completionCount={trailCounts[trail.id]}
           />
         ))}
 

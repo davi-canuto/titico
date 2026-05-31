@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
+import MarkdownBody from "@/components/platform/MarkdownBody"
 import { ContentType, Difficulty } from "@prisma/client"
 import type { ContentWithMeta } from "@/types/domain"
 import VideoSection from "./VideoSection"
@@ -192,7 +193,7 @@ export default function ProgressTracker({ content, totalDuration }: ProgressTrac
       {/* ARTICLE */}
       {content.type === ContentType.ARTICLE && content.article && (
         <div className="rounded-xl border border-white/5 bg-[#161616] p-6 md:p-8">
-          <p className="whitespace-pre-wrap leading-relaxed text-white/80">{content.article.body}</p>
+          <MarkdownBody>{content.article.body}</MarkdownBody>
         </div>
       )}
 

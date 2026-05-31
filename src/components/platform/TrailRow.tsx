@@ -16,9 +16,10 @@ interface TrailRowProps {
   items: TrailRowItem[]
   progressMap?: Record<string, { watchedSeconds?: number | null }>
   locked?: boolean
+  completionCount?: { completed: number; total: number }
 }
 
-export default function TrailRow({ title, items, progressMap = {}, locked }: TrailRowProps) {
+export default function TrailRow({ title, items, progressMap = {}, locked, completionCount }: TrailRowProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const [hovered, setHovered] = useState(false)
 
@@ -30,9 +31,16 @@ export default function TrailRow({ title, items, progressMap = {}, locked }: Tra
   return (
     <section className="flex flex-col gap-3">
       {/* Row title */}
-      <h2 className="px-6 text-base font-black uppercase tracking-tight text-white md:px-12">
-        {title}
-      </h2>
+      <div className="px-6 md:px-12 flex items-baseline gap-3">
+        <h2 className="text-base font-black uppercase tracking-tight text-white">
+          {title}
+        </h2>
+        {completionCount && (
+          <span className="text-xs text-white/40">
+            {completionCount.completed}/{completionCount.total} concluídos
+          </span>
+        )}
+      </div>
 
       {/* Scroll container */}
       <div
