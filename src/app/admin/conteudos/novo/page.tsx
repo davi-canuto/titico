@@ -5,6 +5,7 @@ import { createContent } from "@/lib/admin-actions"
 import { ContentType } from "@prisma/client"
 import { prisma } from "@/lib/prisma"
 import TitleSlugFields from "@/components/admin/TitleSlugFields"
+import MarkdownEditor from "@/components/admin/MarkdownEditor"
 
 export const dynamic = "force-dynamic"
 const TYPE_INFO: Record<ContentType, { label: string; desc: string; icon: React.ReactNode }> = {
@@ -241,7 +242,7 @@ export default async function NovoConteudoPage({ searchParams }: NovoConteudoPag
           {typeFilter === ContentType.ARTICLE && (
             <div>
               <label className={labelCls}>Corpo do artigo *</label>
-              <textarea name="body" required rows={12} className={textareaCls} placeholder="Escreva o conteúdo completo aqui..." />
+              <MarkdownEditor name="body" required />
             </div>
           )}
 

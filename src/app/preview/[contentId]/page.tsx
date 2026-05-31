@@ -4,6 +4,7 @@ import type { Metadata } from "next"
 import { auth } from "@/lib/auth"
 import { getPreviewData, type PreviewData } from "@/lib/content-preview"
 import { PurchaseGate } from "../_components/PurchaseGate"
+import MarkdownBody from "@/components/platform/MarkdownBody"
 
 type Props = {
   params: Promise<{ contentId: string }>
@@ -139,10 +140,8 @@ export default async function PreviewPage({ params }: Props) {
 function PreviewBody({ meta }: { meta: PreviewData["meta"] }) {
   if (meta.type === "ARTICLE") {
     return (
-      <div className="space-y-4 text-white/80 leading-relaxed">
-        {meta.bodyTruncated.map((paragraph, i) => (
-          <p key={i}>{paragraph}</p>
-        ))}
+      <div>
+        <MarkdownBody>{meta.bodyTruncated.join("\n\n")}</MarkdownBody>
       </div>
     )
   }

@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma"
 import { updateContent } from "@/lib/admin-actions"
 import { ContentType } from "@prisma/client"
 import TitleSlugFields from "@/components/admin/TitleSlugFields"
+import MarkdownEditor from "@/components/admin/MarkdownEditor"
 
 const inputCls =
   "w-full rounded-lg border border-white/10 bg-[#0d0d0d] px-3 py-2.5 text-sm text-white placeholder:text-white/30 outline-none focus:border-white/30 transition-colors"
@@ -178,7 +179,7 @@ export default async function EditarConteudoPage({ params, searchParams }: PageP
         {content.type === ContentType.ARTICLE && content.article && (
           <div>
             <label className={labelCls}>Corpo do artigo *</label>
-            <textarea name="body" required rows={14} defaultValue={content.article.body} className={textareaCls} />
+            <MarkdownEditor name="body" required defaultValue={content.article.body} />
           </div>
         )}
 
