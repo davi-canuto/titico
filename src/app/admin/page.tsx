@@ -16,6 +16,7 @@ import {
   updateCreatorPixKey,
 } from "@/lib/admin-actions"
 import ConfirmButton from "@/components/admin/ConfirmButton"
+import RevenueChart from "@/components/admin/RevenueChart"
 
 export const dynamic = "force-dynamic"
 const TYPE_LABELS: Record<string, string> = {
@@ -76,6 +77,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
     newUsers: number
     usersWithAccess: number
     topContent: Array<{ contentId: string; viewers: number; title: string; type: ContentType }>
+    purchaseData: Array<{ createdAt: Date; price: number }>
   } | null = null
 
   if (activeTab === "analytics") {
@@ -130,6 +132,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
           title: contentMap.get(r.contentId)!.title,
           type: contentMap.get(r.contentId)!.type,
         })),
+      purchaseData: completedPurchases.map((p) => ({ createdAt: p.createdAt, price: p.product.price })),
     }
   }
 
@@ -478,6 +481,9 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
             <h2 className="mb-4 border-l-2 border-[#e3001b] pl-3 text-xs font-semibold uppercase tracking-[0.25em] text-white/60">
               Receita
             </h2>
+            <div className="mb-4">
+              <RevenueChart purchases={analytics.purchaseData} />
+            </div>
             <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
               <div className="rounded-xl border border-white/5 bg-[#161616] p-5">
                 <p className="mb-2 text-xs font-semibold uppercase tracking-[0.25em] text-white/40">Receita Total</p>
