@@ -1,4 +1,6 @@
 import Link from "next/link"
+import { getLatestVideos } from "@/lib/youtube"
+import type { YouTubeVideo } from "@/lib/youtube"
 
 const CHANNELS = [
   {
@@ -70,8 +72,11 @@ function ChannelIcon({ icon, color }: { icon: string; color: string }) {
   )
 }
 
-export default function ComunidadePage() {
-  const primaryChannel = CHANNELS.find((c) => c.primary)!
+export default async function ComunidadePage() {
+  const [videos, primaryChannel] = await Promise.all([
+    getLatestVideos(6),
+    Promise.resolve(CHANNELS.find((c) => c.primary)!),
+  ])
   const secondaryChannels = CHANNELS.filter((c) => !c.primary)
 
   return (
@@ -176,6 +181,50 @@ export default function ComunidadePage() {
             ))}
           </div>
         </section>
+
+        {/* ── Vídeos recentes do YouTube ───────────────────────────── */}
+        {videos.length > 0 && (
+          <section>
+            <h3 className="mb-4 border-l-2 border-[#e3001b] pl-3 text-xs font-semibold uppercase tracking-[0.25em] text-white/50">
+              Vídeos recentes
+            </h3>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {videos.map((video: YouTubeVideo) => (
+                <a
+                  key={video.id}
+                  href={`https://youtube.com/watch?v=${video.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-[#161616] border border-white/5 rounded-xl overflow-hidden hover:border-white/10 transition-colors"
+                >
+                  <div className="aspect-video relative overflow-hidden">
+                    <img
+                      src={video.thumbnail}
+                      alt={video.title}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity bg-black/40">
+                      <svg width="40" height="40" viewBox="0 0 24 24" fill="white">
+                        <polygon points="5,3 19,12 5,21" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <p className="text-white text-sm font-semibold leading-snug line-clamp-2 mb-2">
+                      {video.title}
+                    </p>
+                    <p className="text-white/40 text-xs">
+                      {new Date(video.publishedAt).toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" })}
+                    </p>
+                    <span className="mt-2 inline-block text-[#e3001b] text-xs font-semibold hover:underline">
+                      Assistir →
+                    </span>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* ── CTA final ────────────────────────────────────────────── */}
         <section className="rounded-xl border border-white/5 bg-[#111111] px-6 py-8 text-center">
