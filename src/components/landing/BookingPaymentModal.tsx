@@ -11,6 +11,7 @@ interface Props {
   calSlug: string
   productName: string
   isAuthenticated: boolean
+  pixEnabled: boolean
 }
 
 interface PixData {
@@ -24,7 +25,7 @@ type View = 'buttons' | 'qr' | 'expired'
 const POLL_INTERVAL_MS = 3000
 const POLL_TIMEOUT_MS = 10 * 60 * 1000
 
-export default function BookingPaymentModal({ open, onClose, productId, calSlug, productName, isAuthenticated }: Props) {
+export default function BookingPaymentModal({ open, onClose, productId, calSlug, productName, isAuthenticated, pixEnabled }: Props) {
   const router = useRouter()
   const [view, setView] = useState<View>('buttons')
   const [loadingCard, setLoadingCard] = useState(false)
@@ -214,18 +215,22 @@ export default function BookingPaymentModal({ open, onClose, productId, calSlug,
                 Cartão de Crédito
               </button>
 
-              <button
-                onClick={handlePix}
-                disabled={loadingCard || loadingPix}
-                className="flex items-center gap-3 border border-white/25 hover:border-white active:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed text-white font-black uppercase tracking-wider text-sm px-5 py-3.5 rounded-lg transition-colors w-full"
-              >
-                {loadingPix ? <Spinner /> : <PixIcon />}
-                PIX
-              </button>
+              {pixEnabled && (
+                <button
+                  onClick={handlePix}
+                  disabled={loadingCard || loadingPix}
+                  className="flex items-center gap-3 border border-white/25 hover:border-white active:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed text-white font-black uppercase tracking-wider text-sm px-5 py-3.5 rounded-lg transition-colors w-full"
+                >
+                  {loadingPix ? <Spinner /> : <PixIcon />}
+                  PIX
+                </button>
+              )}
             </div>
 
             {error && <p className="mt-4 text-xs text-red-400 text-center">{error}</p>}
-            <p className="mt-5 text-xs text-white/30 text-center">Pagamento seguro via Stripe e Woovi</p>
+            <p className="mt-5 text-xs text-white/30 text-center">
+              Pagamento seguro via Stripe{pixEnabled ? ' e Woovi' : ''}
+            </p>
           </>
         )}
 

@@ -40,9 +40,10 @@ interface Props {
   isAuthenticated: boolean
   productsBySlug: Record<string, { id: string; calSlug: string }>
   pdfProductId: string | null
+  pixEnabled: boolean
 }
 
-export default function ProductsCTA({ isAuthenticated, productsBySlug, pdfProductId }: Props) {
+export default function ProductsCTA({ isAuthenticated, productsBySlug, pdfProductId, pixEnabled }: Props) {
   const [pdfModalOpen, setPdfModalOpen] = useState(false)
   const [bookingModal, setBookingModal] = useState<{ productId: string; calSlug: string; productName: string } | null>(null)
 
@@ -124,6 +125,7 @@ export default function ProductsCTA({ isAuthenticated, productsBySlug, pdfProduc
         onClose={() => setPdfModalOpen(false)}
         productId={pdfProductId ?? ''}
         isAuthenticated={isAuthenticated}
+        pixEnabled={pixEnabled}
       />
 
       {bookingModal && (
@@ -134,6 +136,7 @@ export default function ProductsCTA({ isAuthenticated, productsBySlug, pdfProduc
           calSlug={bookingModal.calSlug}
           productName={bookingModal.productName}
           isAuthenticated={isAuthenticated}
+          pixEnabled={pixEnabled}
         />
       )}
     </section>

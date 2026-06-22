@@ -7,6 +7,7 @@ import { PurchaseStatus } from "@prisma/client"
 
 const bodySchema = z.object({
   productId: z.string().min(1),
+  force: z.boolean().optional(),
 })
 
 const appUrl = process.env.APP_URL ?? "http://localhost:3000"
@@ -21,7 +22,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "VALIDATION_ERROR", issues: parsed.error.issues }, { status: 400 })
   }
 
-  const { productId } = parsed.data
+  const { productId, force } = parsed.data
 
   const product = await prisma.product.findFirst({
     where: { id: productId, active: true },
@@ -30,7 +31,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "VALIDATION_ERROR", issues: [{ message: "Product not found" }] }, { status: 400 })
   }
 
-  if (userId) {
+  if (userId && !force) {
     const existing = await prisma.purchase.findFirst({
       where: { userId, productId, status: PurchaseStatus.COMPLETED },
     })

@@ -109,6 +109,7 @@ model Product {
   description      String
   stripePriceId    String?          @unique
   active           Boolean          @default(true)
+  showOnPricing    Boolean          @default(true)
   createdAt        DateTime         @default(now())
   price            Int
   features         String[]         @default([])
@@ -244,6 +245,11 @@ model UserProgress {
   user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, contentId])
+}
+
+model SiteConfig {
+  id          String  @id @default("global")
+  pixEnabled  Boolean @default(true)
 }
 
 enum UserRole {

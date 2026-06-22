@@ -11,6 +11,11 @@ const bodySchema = z.object({
 
 export async function POST(req: NextRequest) {
   try {
+    const siteConfig = await prisma.siteConfig.findUnique({ where: { id: "global" } })
+    if (!siteConfig?.pixEnabled) {
+      return NextResponse.json({ error: "PIX_DISABLED" }, { status: 503 })
+    }
+
     const session = await auth()
     const userId = session?.user?.id ?? null
 

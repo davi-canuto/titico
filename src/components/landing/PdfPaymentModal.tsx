@@ -7,6 +7,7 @@ interface Props {
   onClose: () => void
   productId: string
   isAuthenticated: boolean
+  pixEnabled: boolean
 }
 
 interface PixData {
@@ -20,12 +21,12 @@ interface DeliveryData {
   downloadPassword: string | null
 }
 
-type View = 'buttons' | 'qr' | 'expired' | 'success'
+type View = 'buttons' | 'qr' | 'expired' | 'success' | 'already-purchased'
 
 const POLL_INTERVAL_MS = 3000
 const POLL_TIMEOUT_MS = 10 * 60 * 1000
 
-export default function PdfPaymentModal({ open, onClose, productId, isAuthenticated }: Props) {
+export default function PdfPaymentModal({ open, onClose, productId, isAuthenticated, pixEnabled }: Props) {
   const [view, setView] = useState<View>('buttons')
   const [loadingCard, setLoadingCard] = useState(false)
   const [loadingPix, setLoadingPix] = useState(false)
@@ -95,16 +96,21 @@ export default function PdfPaymentModal({ open, onClose, productId, isAuthentica
 
   if (!open) return null
 
-  async function handleCard() {
+  async function handleCard(force?: boolean) {
     setLoadingCard(true)
     setError(null)
     try {
       const res = await fetch('/api/checkout/session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ productId }),
+        body: JSON.stringify({ productId, ...(force ? { force: true } : {}) }),
       })
-      const data = (await res.json()) as { checkoutUrl?: string; issues?: { message: string }[] }
+      const data = (await res.json()) as { checkoutUrl?: string; error?: string; issues?: { message: string }[] }
+      if (res.status === 409 && data.error === 'ALREADY_PURCHASED') {
+        setView('already-purchased')
+        setLoadingCard(false)
+        return
+      }
       if (!res.ok) {
         setError(data?.issues?.[0]?.message ?? 'Erro ao iniciar pagamento. Tente novamente.')
         setLoadingCard(false)
@@ -212,7 +218,7 @@ export default function PdfPaymentModal({ open, onClose, productId, isAuthentica
 
             <div className="flex flex-col gap-3">
               <button
-                onClick={handleCard}
+                onClick={() => handleCard()}
                 disabled={loadingCard || loadingPix}
                 className="flex items-center gap-3 bg-[#e3001b] hover:bg-[#b50015] active:bg-[#900010] disabled:opacity-50 disabled:cursor-not-allowed text-white font-black uppercase tracking-wider text-sm px-5 py-3.5 rounded-lg transition-colors w-full"
               >
@@ -225,18 +231,45 @@ export default function PdfPaymentModal({ open, onClose, productId, isAuthentica
                 Cartão de Crédito
               </button>
 
-              <button
-                onClick={handlePix}
-                disabled={loadingCard || loadingPix}
-                className="flex items-center gap-3 border border-white/25 hover:border-white active:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed text-white font-black uppercase tracking-wider text-sm px-5 py-3.5 rounded-lg transition-colors w-full"
-              >
-                {loadingPix ? <Spinner /> : <PixIcon />}
-                PIX
-              </button>
+              {pixEnabled && (
+                <button
+                  onClick={handlePix}
+                  disabled={loadingCard || loadingPix}
+                  className="flex items-center gap-3 border border-white/25 hover:border-white active:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed text-white font-black uppercase tracking-wider text-sm px-5 py-3.5 rounded-lg transition-colors w-full"
+                >
+                  {loadingPix ? <Spinner /> : <PixIcon />}
+                  PIX
+                </button>
+              )}
             </div>
 
             {error && <p className="mt-4 text-xs text-red-400 text-center">{error}</p>}
-            <p className="mt-5 text-xs text-white/30 text-center">Pagamento seguro via Stripe e Woovi</p>
+            <p className="mt-5 text-xs text-white/30 text-center">
+              Pagamento seguro via Stripe{pixEnabled ? ' e Woovi' : ''}
+            </p>
+          </>
+        )}
+
+        {view === 'already-purchased' && (
+          <>
+            <h2 className="text-xl font-black uppercase text-white mb-3">VOCÊ JÁ POSSUI ESTE PRODUTO</h2>
+            <p className="text-white/50 text-sm mb-6">
+              Este produto já foi adquirido na sua conta. Se quiser comprar novamente (ex: presentear alguém), clique no botão abaixo.
+            </p>
+            <button
+              onClick={() => handleCard(true)}
+              disabled={loadingCard}
+              className="w-full flex items-center justify-center gap-2 bg-[#e3001b] hover:bg-[#b50015] active:bg-[#900010] disabled:opacity-50 disabled:cursor-not-allowed text-white font-black uppercase tracking-wider text-sm px-5 py-3.5 rounded-lg transition-colors"
+            >
+              {loadingCard ? <Spinner /> : null}
+              Comprar mesmo assim
+            </button>
+            <button
+              onClick={onClose}
+              className="w-full mt-3 text-xs text-white/40 hover:text-white/70 transition-colors py-2"
+            >
+              Cancelar
+            </button>
           </>
         )}
 

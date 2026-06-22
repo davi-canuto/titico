@@ -287,6 +287,30 @@ export async function toggleProduct(id: string, active: boolean) {
   revalidatePath("/admin")
 }
 
+export async function toggleProductOnPricing(id: string) {
+  const { error } = await requireAdmin()
+  if (error) return
+  const product = await prisma.product.findUnique({ where: { id }, select: { showOnPricing: true } })
+  if (!product) throw new Error("Product not found")
+  await prisma.product.update({ where: { id }, data: { showOnPricing: !product.showOnPricing } })
+  revalidatePath("/")
+  revalidatePath("/admin")
+}
+
+// ─── SiteConfig ───────────────────────────────────────────────────────────────
+
+export async function updateSiteConfig(data: { pixEnabled?: boolean }) {
+  const { error } = await requireAdmin()
+  if (error) return
+  await prisma.siteConfig.upsert({
+    where: { id: "global" },
+    update: data,
+    create: { id: "global", pixEnabled: data.pixEnabled ?? true },
+  })
+  revalidatePath("/")
+  revalidatePath("/admin")
+}
+
 export async function createProduct(formData: FormData) {
   const { error } = await requireAdmin()
   if (error) redirect("/login")

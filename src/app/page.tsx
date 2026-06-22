@@ -13,7 +13,7 @@ import LandingFooter from '@/components/landing/LandingFooter'
 const PDF_PRODUCT_SLUG = 'guia-shaco-ad'
 
 export default async function RootPage() {
-  const [session, products, pdfProduct, samples] = await Promise.all([
+  const [session, products, pdfProduct, samples, siteConfig] = await Promise.all([
     auth(),
     prisma.product.findMany({
       where: { active: true },
@@ -35,16 +35,18 @@ export default async function RootPage() {
         matchup: { select: { difficulty: true } },
       },
     }),
+    prisma.siteConfig.findUnique({ where: { id: 'global' } }),
   ])
 
   const productsBySlug = Object.fromEntries(products.map((p) => [p.slug, { id: p.id, calSlug: p.calSlug ?? '' }]))
+  const pixEnabled = siteConfig?.pixEnabled ?? true
 
   return (
     <div className="bg-[#0d0d0d] text-white min-h-screen">
       <LandingHeader isAuthenticated={!!session} />
       <main className="pt-16">
         <Hero />
-        <ProductsCTA isAuthenticated={!!session} productsBySlug={productsBySlug} pdfProductId={pdfProduct?.id ?? null} />
+        <ProductsCTA isAuthenticated={!!session} productsBySlug={productsBySlug} pdfProductId={pdfProduct?.id ?? null} pixEnabled={pixEnabled} />
         <VideoSection />
         <MatchupGrid />
         <About />

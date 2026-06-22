@@ -10,10 +10,12 @@ import {
   toggleTrail,
   deleteTrail,
   toggleProduct,
+  toggleProductOnPricing,
   deleteProduct,
   createCreator,
   toggleCreatorActive,
   updateCreatorPixKey,
+  updateSiteConfig,
 } from "@/lib/admin-actions"
 import ConfirmButton from "@/components/admin/ConfirmButton"
 import RevenueChart from "@/components/admin/RevenueChart"
@@ -42,15 +44,17 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
     tab === "produtos" ? "produtos" :
     tab === "usuarios" ? "usuarios" :
     tab === "criadores" ? "criadores" :
+    tab === "configuracoes" ? "configuracoes" :
     "conteudos"
 
-  const [contents, trails, products] = await Promise.all([
+  const [contents, trails, products, siteConfig] = await Promise.all([
     prisma.content.findMany({ orderBy: { createdAt: "desc" } }),
     prisma.trail.findMany({
       include: { _count: { select: { items: true } } },
       orderBy: { createdAt: "desc" },
     }),
     prisma.product.findMany({ orderBy: { createdAt: "asc" } }),
+    prisma.siteConfig.findUnique({ where: { id: "global" } }),
   ])
 
   const creators = activeTab === "criadores"
@@ -191,6 +195,9 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
         </Link>
         <Link href="/admin/agendamentos" className={tabCls("agendamentos")}>
           Agendamentos
+        </Link>
+        <Link href="/admin?tab=configuracoes" className={tabCls("configuracoes")}>
+          Config
         </Link>
       </div>
 
@@ -410,6 +417,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                     <th className={thCls}>Descrição</th>
                     <th className={thCls}>Preço</th>
                     <th className={thCls}>Status</th>
+                    <th className={thCls}>Pricing</th>
                     <th className={thCls}>Ações</th>
                   </tr>
                 </thead>
@@ -435,6 +443,24 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                             Inativo
                           </span>
                         )}
+                      </td>
+                      <td className={cellCls}>
+                        <div className="flex flex-col gap-1">
+                          <form action={toggleProductOnPricing.bind(null, p.id)}>
+                            <button
+                              type="submit"
+                              title={p.showOnPricing ? "Ocultar do #pricing" : "Exibir no #pricing"}
+                              className={`text-xs hover:underline ${p.showOnPricing ? "text-[#4ade80]" : "text-white/30"}`}
+                            >
+                              {p.showOnPricing ? "Visível" : "Oculto"}
+                            </button>
+                          </form>
+                          {!p.active && p.showOnPricing && (
+                            <span className="text-[10px] text-[#fbbf24]" title="Produto inativo não aparece no pricing mesmo com toggle ativo">
+                              ⚠ inativo
+                            </span>
+                          )}
+                        </div>
                       </td>
                       <td className={cellCls}>
                         <div className="flex items-center gap-2">
@@ -744,6 +770,37 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
               </table>
             </div>
           )}
+        </div>
+      )}
+
+      {/* Configurações tab */}
+      {activeTab === "configuracoes" && (
+        <div className="flex flex-col gap-6">
+          <div className="rounded-xl border border-white/5 bg-[#161616] p-6">
+            <h2 className="mb-6 border-l-2 border-[#e3001b] pl-3 text-xs font-semibold uppercase tracking-[0.25em] text-white/60">
+              Métodos de Pagamento
+            </h2>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-semibold text-white">Pagamento via Pix</p>
+                <p className="text-xs text-white/40 mt-1">
+                  Quando desabilitado, o botão Pix some dos modais de pagamento e da landing page.
+                </p>
+              </div>
+              <form action={updateSiteConfig.bind(null, { pixEnabled: !(siteConfig?.pixEnabled ?? true) })}>
+                <button
+                  type="submit"
+                  className={`flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-black uppercase tracking-wider transition-colors ${
+                    (siteConfig?.pixEnabled ?? true)
+                      ? "bg-[#4ade80]/20 text-[#4ade80] hover:bg-[#4ade80]/30"
+                      : "bg-white/5 text-white/40 hover:bg-white/10"
+                  }`}
+                >
+                  {(siteConfig?.pixEnabled ?? true) ? "Habilitado" : "Desabilitado"}
+                </button>
+              </form>
+            </div>
+          </div>
         </div>
       )}
     </main>

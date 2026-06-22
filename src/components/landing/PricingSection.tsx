@@ -4,7 +4,7 @@ import PlanCard from '@/components/platform/PlanCard'
 async function getProducts() {
   try {
     const products = await prisma.product.findMany({
-      where: { active: true },
+      where: { active: true, showOnPricing: true },
       orderBy: { price: 'asc' },
     })
     return products.map((p) => {
